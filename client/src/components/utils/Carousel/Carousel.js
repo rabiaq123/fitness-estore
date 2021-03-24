@@ -1,5 +1,6 @@
 import React from "react";
 import { Carousel as LandingCarousel, Image } from "grommet";
+// @ts-ignore
 import guy from "../../../assets/black_guy_lifting.png";
 
 export default function Carousel() {

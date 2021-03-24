@@ -45,8 +45,8 @@ Content-Type: application/json
 }
 
 ### Adding a record
-POST http://https://fitnova-server.herokuapp.com/API/addData HTTP/1.1
-Host: localhost:3000
+POST https://fitnova-server.herokuapp.com/API/addData HTTP/1.1
+# Host: https://fitnova-server.herokuapp.com
 Content-Type: application/json
 
 {

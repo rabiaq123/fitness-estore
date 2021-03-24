@@ -3,8 +3,6 @@ const axios = require('axios');
     (function () {
     let JSONData = {
         tableName: 'PRODUCTS',
-        //tableName: 'RAW_MATERIALS',
-        //tableName: 'HYDROGEN_PEROXIDE_DATA',
         /* identifiers: {
             record_id: 6
         }, */

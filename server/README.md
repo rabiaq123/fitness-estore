@@ -26,3 +26,6 @@ When using the API, use this syntax (tableName, parameters, data)
         ]
     }
 ```
+## Updating the server api
+Before doing all that, make sure you have heroku installed on your laptop then login to heroku from the terminal using heroku login. This will prompt you to login to the heroku CLI, then you will be able to run heroku commands.
+When you want to update the api, first make sure you are in the root of the repository (CIS3750_JS) and add and commit them like you usually do. Then in order to push and deploy those changes to heroku (the server), write 'git subtree push --prefix server heroku master'. 

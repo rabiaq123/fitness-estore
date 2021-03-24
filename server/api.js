@@ -26,7 +26,7 @@ const status = {
 /** 
  *  Retrieves 10 records (Paginated) from products table 
  * ----------------------
- *  @returns records -> list of 10 paginated records 
+ *  @returns records -> list of 10 paginated product rows
  */
 router.get('/getProducts', (req, res) => {
     const page = parseInt(req.query.page);
@@ -239,7 +239,7 @@ function setCommand(operation, tableName, identifiers) {
     let commandSectionString = [operation];
     if (operation == 'SELECT') {
         commandSectionString.push('* FROM ' + tableName);
-        //Completes string if its getting all experiment records
+        //Completes string if its getting all products
         if (tableName == 'PRODUCTS' && identifiers.length == 0) {
             commandSectionString.push('ORDER BY product_id');
         } else {
@@ -292,7 +292,7 @@ function setValues(operation, parameters, identifiers) {
         //Adding a returning statement to get the ID(and other data) of the inserted row
         valueSectionString.push('RETURNING *');
     }
-    //Setting identifiers (e.g WHERE record_id = 1)
+    //Setting identifiers (e.g WHERE product_id = 1)
     let set = [];
     Object.keys(identifiers).forEach(key => {
         set.push(key + ' = ' + identifiers[key]);

@@ -1,4 +1,6 @@
+import React from "react";
 import "./App.css";
+<<<<<<< HEAD
 import Navbar from "./components/Navbar";
 import Carousel from "./components/Carousel/Carousel";
 import { Box, Grid } from "grommet";
@@ -31,6 +33,16 @@ function App() {
       </Grid>
     </article>
   );
+=======
+import Router from "./Router";
+
+function App() {
+    return (
+        <div className="App">
+            <Router />
+        </div>
+    );
+>>>>>>> origin/main
 }
 
 export default App;

@@ -165,28 +165,12 @@ router.post('/deleteData', (req, res) => {
 
     (async function () {
         try {
-            // Cascade deleting if deleting an experiment record (delete all related rows from RM and HP tables then the experiment record)
-            if (JSONObject.tableName == 'EXPERIMENT_RECORDS') {
-                let changes = {}; // To log the status messages after each DB query
-                let returnData = await DBRunner(queryStringBuilder('DELETE', 'RAW_MATERIALS', [], { experiment_record_id: JSONObject.identifiers.record_id }), []);
-                //console.log(returnData);
-                changes.RM = returnData.rowCount;
-                returnData = await DBRunner(queryStringBuilder('DELETE', 'HYDROGEN_PEROXIDE_DATA', [], { experiment_record_id: JSONObject.identifiers.record_id }), []);
-                //console.log(returnData);
-                changes.HP = returnData.rowCount;
-                returnData = await DBRunner(queryStringBuilder('DELETE', JSONObject.tableName, [], JSONObject.identifiers), []);
-                //console.log(returnData);
-                changes.ER = returnData.rowCount;
-                res.status(status.success).send({
-                    message: `successfully deleted ${changes.ER} record(s) from experiment_records, ${changes.RM} from raw_materials and ${changes.HP} from hydrogen_peroxide_data `,
-                });
-            } else {
-                // Deleting from RM or HP table
-                returnData = await DBRunner(queryStringBuilder('DELETE', JSONObject.tableName, [], JSONObject.identifiers), []);
-                res.status(status.success).send({
-                    message: `successfully deleted ${returnData.rowCount} record(s) from ${JSONObject.tableName}`,
-                });
-            }
+            // Deleting from a table
+            returnData = await DBRunner(queryStringBuilder('DELETE', JSONObject.tableName, [], JSONObject.identifiers), []);
+            res.status(status.success).send({
+                message: `successfully deleted ${returnData.rowCount} record(s) from ${JSONObject.tableName}`,
+            });
+            
         } catch (error) {
             res.status(status.error).send(error.message);
         }

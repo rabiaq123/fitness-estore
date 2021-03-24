@@ -1,4 +1,8 @@
-GET https://fitnova-server.herokuapp.com/api/getProducts?page=1
+GET https://fitnova-server.herokuapp.com/API/getProducts?page=1
+
+###
+GET https://fitnova-server.herokuapp.com/api/
+
 ###
 GET http://localhost:3000/API/getProducts?page=1 HTTP/1.1
 

@@ -1,14 +1,13 @@
+import React from "react";
 import "./App.css";
-import Navbar from "./components/Navbar";
+import Router from "./Router";
 
 function App() {
-  return (
-    <article>
-      <header>
-        <Navbar />
-      </header>
-    </article>
-  );
+    return (
+        <div className="App">
+            <Router />
+        </div>
+    );
 }
 
 export default App;

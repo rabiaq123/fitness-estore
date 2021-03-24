@@ -5,7 +5,7 @@ export default function Navbar() {
   return (
     <AppBar position="static">
       <Toolbar style={{ backgroundColor: "#FE646F" }}>
-        <img src="" />
+        {/* <img src="" /> */}
         <InputBase placeholder="Search..." />
       </Toolbar>
     </AppBar>

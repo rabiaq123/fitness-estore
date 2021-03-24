@@ -5,7 +5,7 @@ import guy from "../../../assets/black_guy_lifting.png";
 
 export default function Carousel() {
   return (
-    <LandingCarousel fill alignSelf="center">
+    <LandingCarousel play={15000} fill alignSelf="center">
       <Image fit="contain" src={guy} />
       <Image fit="contain" src={guy} />
     </LandingCarousel>

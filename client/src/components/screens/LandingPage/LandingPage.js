@@ -10,7 +10,7 @@ export default function LandingPage() {
         direction="row"
         pad="medium"
         width={{
-          max: "1600px",
+          max: "1200px",
         }}
         style={{ margin: "auto", marginTop: 50 }}
       >

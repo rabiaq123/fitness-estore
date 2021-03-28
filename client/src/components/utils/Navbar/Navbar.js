@@ -163,7 +163,6 @@ export default function Navbar() {
             <InputBase
               placeholder="Search..."
               classes={{ root: classes.inputRoot, input: classes.inputInput }}
-              // inputRef={searchInputEl}
               onKeyDown={handleSearch}
             />
           </div>

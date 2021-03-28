@@ -2,20 +2,41 @@ import React, { useState } from "react";
 import fitnova from "../../../assets/fitnova_logo.png";
 import {
   AppBar,
+  Button,
   InputBase,
   Menu,
   MenuItem,
   Toolbar,
-  Typography,
 } from "@material-ui/core";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { ShoppingCart } from "@material-ui/icons";
 import "./Navbar.css";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
+    // display: "flex",
+  },
+  navButtons: {
+    fontWeight: "bold",
+    color: "white",
+    padding: "10px",
+    borderRadius: "10px",
+    margin: "0 20px 0 20px",
+  },
+  navMenu: {
+    "& > .MuiPaper-root": {
+      // textAlign: "right",
+      borderRadius: "25px",
+    },
+  },
+  navMenuItems: {
+    fontWeight: "bold",
+    borderRadius: "10px",
+    margin: "0 10px 0 10px",
+    justifyContent: "center",
   },
   search: {
     position: "relative",
@@ -53,31 +74,75 @@ const useStyles = makeStyles((theme) => ({
       width: "20ch",
     },
   },
+  shoppingCartButton: {
+    borderRadius: "50%",
+    padding: 25,
+  },
+  shoppingCartIcon: {
+    color: "white",
+  },
 }));
 
 export default function Navbar() {
   const classes = useStyles();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
 
   let handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  let handleClose = (event) => {
+  let handleClose = () => {
     setAnchorEl(null);
   };
 
-  let categoryMenu = (
+  let handleSearch = (event) => {
+    if (event.key !== "Enter") return;
+    let searchString = event.target.value;
+    // console.log(event.target.value);
+    history.push("/products", { searchInput: searchString });
+  };
+
+  let productsMenu = (
     <Menu
       anchorEl={anchorEl}
       keepMounted
+      className={classes.navMenu}
+      getContentAnchorEl={null}
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      transformOrigin={{ vertical: "top", horizontal: "center" }}
       open={Boolean(anchorEl)}
       onClose={handleClose}
     >
-      <MenuItem onClick={handleClose}>Weights</MenuItem>
-      <MenuItem onClick={handleClose}>Protein</MenuItem>
-      <MenuItem onClick={handleClose}>Others</MenuItem>
-      <MenuItem onClick={handleClose}>All Products</MenuItem>
+      <MenuItem className={classes.navMenuItems} onClick={handleClose}>
+        <Link
+          to={{ pathname: "/products", state: { category: "weights" } }}
+          className="menu_links"
+        >
+          Weights
+        </Link>
+      </MenuItem>
+      <MenuItem className={classes.navMenuItems} onClick={handleClose}>
+        <Link
+          to={{ pathname: "/products", state: { category: "protein" } }}
+          className="menu_links"
+        >
+          Protein
+        </Link>
+      </MenuItem>
+      <MenuItem className={classes.navMenuItems} onClick={handleClose}>
+        <Link
+          to={{ pathname: "/products", state: { category: "fitness-gear" } }}
+          className="menu_links"
+        >
+          Fitness Gear
+        </Link>
+      </MenuItem>
+      <MenuItem className={classes.navMenuItems} onClick={handleClose}>
+        <Link to="/products" className="menu_links">
+          All Products
+        </Link>
+      </MenuItem>
     </Menu>
   );
 
@@ -85,13 +150,12 @@ export default function Navbar() {
     <div className={classes.grow}>
       <AppBar position="static">
         <Toolbar style={{ backgroundColor: "#FE646F", padding: 20 }}>
-          <Link exact to="/">
+          <Link to="/">
             <img height="50px" width="auto" src={fitnova} alt="Fitnova logo" />
-            {/* <Typography>Category</Typography> */}
           </Link>
-          <Link className="menu-links" to="/products">
-            Category
-          </Link>
+          <Button className={classes.navButtons} onClick={handleClick}>
+            Products
+          </Button>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -99,10 +163,15 @@ export default function Navbar() {
             <InputBase
               placeholder="Search..."
               classes={{ root: classes.inputRoot, input: classes.inputInput }}
+              // inputRef={searchInputEl}
+              onKeyDown={handleSearch}
             />
           </div>
+          <Button className={classes.shoppingCartButton}>
+            <ShoppingCart className={classes.shoppingCartIcon} />
+          </Button>
         </Toolbar>
-        {categoryMenu}
+        {productsMenu}
       </AppBar>
     </div>
   );

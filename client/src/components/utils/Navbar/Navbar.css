@@ -1,5 +1,7 @@
-.menu-links {
-  color: white;
-  margin-left: 30px;
-  margin-right: 30px;
+.menu_links {
+  text-decoration: none;
+}
+
+.menu_links:visited {
+  color: black;
 }

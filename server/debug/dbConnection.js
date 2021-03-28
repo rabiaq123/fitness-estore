@@ -14,7 +14,7 @@ const createExperimentRecordsTable = () => {
     product_id SERIAL NOT NULL PRIMARY KEY  ,
     product_name varchar(256) NOT NULL DEFAULT ''   ,
     product_description varchar(600) DEFAULT '',
-    imageURL varchar (256),
+    image_url varchar (256),
     category varchar(256) NOT NULL DEFAULT 'Others',
     quantity int NOT NULL DEFAULT 0   ,
     price double precision NOT NULL DEFAULT 0   ,

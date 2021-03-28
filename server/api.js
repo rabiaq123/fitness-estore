@@ -219,8 +219,8 @@ function flattenArray(array) {
  */
 function queryStringBuilder(operation, tableName, parameters, identifiers) {
     let queryString = [];
-    queryString.push(setCommand(operation, tableName, identifiers)); //Creating command section of string
-    queryString.push(setValues(operation, parameters, identifiers)); //Creating values section of string
+    queryString.push(setCommand(operation.toUpperCase(), tableName, identifiers)); //Creating command section of string
+    queryString.push(setValues(operation.toUpperCase(), parameters, identifiers)); //Creating values section of string
     console.log(queryString.join(' '));
     return queryString.join(' ');
 }

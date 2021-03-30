@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import fitnova from "../../../assets/fitnova_logo.png";
-import { AppBar, InputBase, Toolbar, Typography } from "@material-ui/core";
+import {
+  AppBar,
+  InputBase,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+} from "@material-ui/core";
 import { fade, makeStyles } from "@material-ui/core/styles";
+import SearchIcon from "@material-ui/icons/Search";
 import { Link } from "react-router-dom";
+import "./Navbar.css";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -48,15 +57,52 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navbar() {
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  let handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  let handleClose = (event) => {
+    setAnchorEl(null);
+  };
+
+  let categoryMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      keepMounted
+      open={Boolean(anchorEl)}
+      onClose={handleClose}
+    >
+      <MenuItem onClick={handleClose}>Weights</MenuItem>
+      <MenuItem onClick={handleClose}>Protein</MenuItem>
+      <MenuItem onClick={handleClose}>Others</MenuItem>
+      <MenuItem onClick={handleClose}>All Products</MenuItem>
+    </Menu>
+  );
 
   return (
     <div className={classes.grow}>
       <AppBar position="static">
         <Toolbar style={{ backgroundColor: "#FE646F", padding: 20 }}>
-          <img height="50px" width="auto" src={fitnova} alt="Fitnova logo" />
-          <Typography>Category</Typography>
-          <InputBase placeholder="Search..." />
+          <Link exact to="/">
+            <img height="50px" width="auto" src={fitnova} alt="Fitnova logo" />
+            {/* <Typography>Category</Typography> */}
+          </Link>
+          <Link className="menu-links" to="/products">
+            Category
+          </Link>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search..."
+              classes={{ root: classes.inputRoot, input: classes.inputInput }}
+            />
+          </div>
         </Toolbar>
+        {categoryMenu}
       </AppBar>
     </div>
   );

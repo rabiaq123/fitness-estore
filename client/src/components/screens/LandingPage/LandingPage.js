@@ -4,13 +4,13 @@ import { Box } from "grommet";
 
 export default function LandingPage() {
   return (
-    <div style={{ height: "100vh" }}>
+    <div style={{ height: "calc(83vh + 1px)" }}>
       <Box
         gridArea="main"
         direction="row"
         pad="medium"
         width={{
-          max: "2000px",
+          max: "1600px",
         }}
         style={{ margin: "auto", marginTop: 50 }}
       >

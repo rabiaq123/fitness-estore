@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import LoginPage from "./components/screens/Login/LoginPage";
+import CheckoutPage from "./components/screens/Checkout/Checkout";
 
 export default function Router() {
     return (
@@ -9,6 +10,7 @@ export default function Router() {
                 <Switch>
                     <Route path="/" exact component={LoginPage} /> {/* Replace with landing page */}
                     <Route path="/login" component={LoginPage} />
+                    <Route path="/checkout" component={CheckoutPage} />
                 </Switch>
             </BrowserRouter>
 

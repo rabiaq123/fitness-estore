@@ -6,24 +6,27 @@ import {
   CardMedia,
   CardContent,
   Typography,
+  CardActions,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Box } from "grommet";
 import ProductDetails from "../ProductDetails/ProductDetails";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import "./Products.css";
 import image from "../../../assets/product_imgs/bowflex-selecttech-552-dumbbell-set.png";
 
 const useStyles = makeStyles((theme) => ({
   productContainer: {
     display: "flex",
+    flexDirection: "row",
     flexWrap: "wrap",
     backgroundColor: "#EFF0F6",
     height: "100%",
     maxWidth: "1200px",
     borderRadius: 50,
     padding: 50,
+    justifyContent: "space-evenly",
   },
   productCard: {
     backgroundColor: "grey",
@@ -34,24 +37,42 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProductCard = (productItem) => {
-  // TODO
+const ProductCard = ({ productItem }) => {
+  let history = useHistory();
+
+  const handleCardClick = () => {
+    history.push("/products-details");
+  };
   console.log(productItem);
   // NOTE Gonna hardcode the images for now since they're null
   return (
-    <Card className="test">
+    <Card
+      style={{
+        borderRadius: 25,
+        maxWidth: 300,
+        marginTop: 10,
+        marginBottom: 10,
+      }}
+    >
       <CardActionArea>
         <CardMedia
+          component="img"
           image={image}
-          // className={style.productCardImage}
-          title={productItem.productName}
+          style={{ maxHeight: 140 }}
+          title={productItem.product_name}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            {productItem.productName}
+            {productItem.product_name}
           </Typography>
         </CardContent>
       </CardActionArea>
+      <CardActions style={{ float: "right", paddingRight: 25, color: "grey" }}>
+        {new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        }).format(productItem.price)}
+      </CardActions>
     </Card>
   );
 };
@@ -59,16 +80,6 @@ const ProductCard = (productItem) => {
 export default function Products() {
   const classes = useStyles();
   const location = useLocation();
-  // const payload = {
-  //   code: 200,
-  //   token: "6C3ccXkMYv4Vok_Huxptwg",
-  //   data: {
-  //     price: "nameFirst",
-  //     email: "internetEmail",
-  //     phone: "phoneHome",
-  //     // _repeat: 1,
-  //   },
-  // };
   /*
    * SORT OPTIONS
    *  Highest to lowest price = 0
@@ -120,9 +131,7 @@ export default function Products() {
         <Paper className={classes.productContainer} elevation={0}>
           {products.length ? (
             products.map((item, index) => {
-              return (
-                <ProductCard key={index} style={classes} productItem={item} />
-              );
+              return <ProductCard key={index} productItem={item} />;
             })
           ) : (
             <></>

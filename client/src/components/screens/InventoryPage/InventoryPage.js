@@ -1,124 +1,159 @@
 import React, { useEffect, useState } from "react";
 import {
   Paper,
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { fade, makeStyles } from "@material-ui/core/styles";
+import Typography from '@material-ui/core/Typography';
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableRow from "@material-ui/core/TableRow";
+import InputBase from "@material-ui/core/InputBase";
 import { Grid, Box } from "grommet";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
+import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles((theme) => ({
-  product_container: {
-    display: "flex",
-    flexWrap: "wrap",
-    // "& > *": {
-    //   margin: theme.spacing(1),
-    //   width: theme.spacing(16),
-    //   height: theme.spacing(16),
-    // },
+  body_container: {
     backgroundColor: "#EFF0F6",
     height: "100%",
-    maxWidth: "1200px",
+    width: "100%",
     borderRadius: 50,
-    padding: 50,
   },
-  // product_container: {
-  //   backgroundColor: "grey",
-  //   height: "100%",
-  //   maxWidth: "100%",
-  //   borderRadius: 50,
-  //   padding: 50,
-  // },
+  search: {
+    position: "relative",
+    borderRadius: 15,
+    backgroundColor: fade(theme.palette.text.secondary, 0.15),
+    "&:hover": {
+      backgroundColor: fade(theme.palette.text.primary, 0.25),
+    },
+    marginRight: 10,
+    marginLeft: 0,
+    // paddingLeft: 50,
+    marginTop: 15,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(1),
+      width: "85%",
+    },
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputRoot: {
+    color: "inherit",
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "20ch",
+    },
+  },
+  table: {
+    display: "flex",
+  }
 }));
 
-const ProductCard = (productItem) => {
-  // TODO
-  return <div></div>;
-};
-
-export default function Products() {
+export default function InventoryTable() {
   const classes = useStyles();
-  const location = useLocation();
-  const payload = {
-    code: 200,
-    token: "6C3ccXkMYv4Vok_Huxptwg",
-    data: {
-      price: "nameFirst",
-      email: "internetEmail",
-      phone: "phoneHome",
-      // _repeat: 1,
-    },
-  };
-  const [products, setProducts] = useState([]);
+  const history = useHistory();
+  const parentValue = 4;
+  const childValue = 1;
+  const [data, setdata] = React.useState("");
 
-  useEffect(
-    () => {
-      // For testing purposes
-      // (async function getProducts() {
-      //   axios
-      //     .post("https://app.fakejson.com/q", payload)
-      //     .then((resp) => {
-      //       setProducts(resp.data);
-      //     })
-      //     .catch((err) => {
-      //       console.log(err);
-      //     });
-      // })();
-      // setProducts([
-      //   {
-      //     id: 1,
-      //     price: 199.99,
-      //     name: "Testing Dumbbell",
-      //     image_url: "bowflex-selecttech-552-dumbbell-set.png",
-      //   },
-      // ]);
-      // Call DB here for products
-      // Filter by
-      // return () => {};
+  let handleSearch = (event) => {
+    if (event.key !== "Enter") return;
+    let searchString = event.target.value;
+    // console.log(event.target.value);
+    history.push("/products", { searchInput: searchString });
+  };
+
+
+  const generateTable = () => {
+    let table = [];
+    // Outer loop to create parent
+    for (let i = 0; i < parentValue; i++) {
+      let children = [];
+      //Inner loop to create children
+      for (let j = 0; j < childValue; j++) {
+        children.push(
+          <td>
+            <InputBase
+              defaultValue="TextInput"
+              Value={data}
+              onChange={(e) => {
+                setdata(e.target.value);
+              }}
+            />
+          </td>
+        );
+      }
+
+      table.push(
+        <TableRow key={i}>
+          <TableCell>{children}</TableCell>
+        </TableRow>
+      );
+      console.log(table);
+      console.log(data);
     }
-    // [
-    //   /* Track category, filter, and sort by values (left accordion) */
-    // ]
-  );
-  console.log(location);
+    return table;
+  };
 
   return (
     <Grid
       justify="stretch"
+      justifyContent="center"
       // fill="horizontal"
-      rows={["384px", "384px"]}
+      rows={["xxsmall", "large"]}
       columns={["0.25fr", ".75fr"]}
-      gap="xlarge"
+      gap="large"
       areas={[
-        { name: "left-options", start: [0, 0], end: [0, 1] },
-        { name: "products-container", start: [1, 0], end: [1, 1] },
+        { name: "search-bar", start: [0, 0], end: [1, 0] },
+        { name: "inventory-table", start: [0, 1], end: [1, 1] },
       ]}
-      style={{ margin: 50, marginLeft: 50, marginRight: 100 }}
+      style={{ margin: 50, marginLeft: 50, marginRight: 50 }}
     >
-      <Box gridArea="left-options">
-        <Paper
-          style={{
-            backgroundColor: "#EFF0F6",
-            height: "100%",
-            width: "100%",
-            borderRadius: 50,
-          }}
-          elevation={0}
-        ></Paper>
+      <Box
+        gridArea="search-bar"
+        style={{
+          display: 'flex',
+          // alignItems: 'center',
+          flexWrap: 'wrap',
+      }}>
+        
+        <Typography variant="h3" position="absolute" gutterBottom>
+          Inventory
+        </Typography>
+        <div className={classes.search}>
+          <div className={classes.searchIcon}>
+            <SearchIcon />
+          </div>
+          <InputBase
+            placeholder="Search..."
+            classes={{ root: classes.inputRoot, input: classes.inputInput }}
+            onKeyDown={handleSearch}
+          />
+        </div>
       </Box>
-      <Box gridArea="products-container">
-        <Paper className={classes.product_container} elevation={0}>
-          {products.length ? (
-            products.map((item, index) => {
-              return <ProductCard key={index} {...item} />;
-            })
-          ) : (
-            <></>
-          )}
+      <Box gridArea="inventory-table">
+        <Paper className={classes.body_container} elevation={0}>
+          {/* <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="simple table">
+            <TableBody>{generateTable()}</TableBody>
+          </Table>
+        </TableContainer> */}
         </Paper>
       </Box>
     </Grid>

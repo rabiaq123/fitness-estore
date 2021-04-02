@@ -40,9 +40,6 @@ const useStyles = makeStyles((theme) => ({
 const ProductCard = ({ productItem }) => {
   let history = useHistory();
 
-  const handleCardClick = () => {
-    history.push("/products-details");
-  };
   console.log(productItem);
   // NOTE Gonna hardcode the images for now since they're null
   return (
@@ -52,7 +49,9 @@ const ProductCard = ({ productItem }) => {
         maxWidth: 300,
         marginTop: 10,
         marginBottom: 10,
+        cursor: "pointer",
       }}
+      onClick={() => history.push("/product-details", { productItem })}
     >
       <CardActionArea>
         <CardMedia

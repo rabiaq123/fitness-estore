@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
+import { useLocation } from "react-router-dom";
 
 export default function ProductDetails() {
-  return (
-    <div>
-      ProductDetails
-    </div>
-  )
+  let { state } = useLocation();
+
+  return <div>ProductDetails</div>;
 }

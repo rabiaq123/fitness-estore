@@ -3,6 +3,9 @@ import {
   Paper,
   Button,
   IconButton,
+  Modal, 
+  Backdrop,
+  Fade
 } from "@material-ui/core";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
@@ -85,10 +88,16 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
   },
-  table: {
-    display: "flex",
-    width: "100%",
-    justify: "stretch"
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
   },
 }));
 
@@ -163,6 +172,9 @@ function CustomPagination() {
 export default function InventoryTable() {
   const classes = useStyles();
   const history = useHistory();
+  const [open, setOpen] = React.useState(false);
+  const [selectedRow, getRow] = React.useState(false);
+  // let selectedRow = []
 
   let handleSearch = (event) => {
     if (event.key !== "Enter") return;
@@ -171,6 +183,13 @@ export default function InventoryTable() {
     // history.push("/products", { searchInput: searchString });
   };
 
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const columns = [
     { field: 'id', headerName: 'Product ID', flex: 0.5 },
@@ -184,7 +203,7 @@ export default function InventoryTable() {
       headerName: "Actions",
       disableClickEventBubbling: true,
       renderCell: (params) => {
-        const onClick = () => {
+        const openModal = () => {
           const api: GridApi = params.api;
           const fields = api
             .getAllColumns()
@@ -195,15 +214,19 @@ export default function InventoryTable() {
           fields.forEach((field) => {
             thisRow[field] = params.getValue(field);
           });
-
-          return alert(JSON.stringify(thisRow, null, 4));
+          setOpen(true);
+          getRow(JSON.stringify(thisRow, null, 4));
+          // this.setState({
+          //   selectedRow: JSON.stringify(thisRow, null, 4)
+          // });
+          return;
         };
 
         return <div>
-          <IconButton color="disabled" onClick={onClick}>
+          <IconButton color="disabled" onClick={openModal}>
             <EditIcon />
           </IconButton>
-          <IconButton color="disabled" onClick={onClick}>
+          <IconButton color="disabled" onClick={openModal}>
             <DeleteIcon />
           </IconButton>
         </div>;
@@ -230,57 +253,78 @@ export default function InventoryTable() {
   ];
 
   return (
-    <Grid
-      justify="stretch"
-      justifyContent="center"
-      rows={["xxsmall", "630px"]}
-      columns={["0.25fr", ".75fr"]}
-      gap="large"
-      areas={[
-        { name: "search-bar", start: [0, 0], end: [1, 0] },
-        { name: "inventory-table", start: [0, 1], end: [1, 1] },
-      ]}
-      style={{ margin: 50, marginLeft: 50, marginRight: 50 }}
-    >
-      <Box
-        gridArea="search-bar"
-        fontWeight="fontWeightBold"
-        style={{
-          display: 'flex',
-          // alignItems: 'center',
-          flexWrap: 'wrap',
-        }}>
+    <div>
+      <Grid
+        justify="stretch"
+        justifyContent="center"
+        rows={["xxsmall", "630px"]}
+        columns={["0.25fr", ".75fr"]}
+        gap="large"
+        areas={[
+          { name: "search-bar", start: [0, 0], end: [1, 0] },
+          { name: "inventory-table", start: [0, 1], end: [1, 1] },
+        ]}
+        style={{ margin: 50, marginLeft: 50, marginRight: 50 }}
+      >
+        <Box
+          gridArea="search-bar"
+          fontWeight="fontWeightBold"
+          style={{
+            display: 'flex',
+            // alignItems: 'center',
+            flexWrap: 'wrap',
+          }}>
 
-        <Typography variant="h3" position="absolute" className={classes.title_text} gutterBottom>
-          Inventory
-        </Typography>
-        <div className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
+          <Typography variant="h3" position="absolute" className={classes.title_text} gutterBottom>
+            Inventory
+          </Typography>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search..."
+              classes={{ root: classes.inputRoot, input: classes.inputInput }}
+              onKeyDown={handleSearch}
+            />
           </div>
-          <InputBase
-            placeholder="Search..."
-            classes={{ root: classes.inputRoot, input: classes.inputInput }}
-            onKeyDown={handleSearch}
-          />
-        </div>
-      </Box>
-      <Box gridArea="inventory-table">
-        <div style={{ height: '100%', width: '100%', display: 'flex' }}>
-          <div style={{ flexGrow: 1}}>
-            <DataGrid
-              components={{
-                NoRowsOverlay: CustomNoRowsOverlay,
-                Pagination: CustomPagination
-              }}
-              style={{
-                borderRadius: 50 
-              }}
-              rows={rows}
-              columns={columns} />
+        </Box>
+        <Box gridArea="inventory-table">
+          <div style={{ height: '100%', width: '100%', display: 'flex' }}>
+            <div style={{ flexGrow: 1}}>
+              <DataGrid
+                components={{
+                  NoRowsOverlay: CustomNoRowsOverlay,
+                  Pagination: CustomPagination
+                }}
+                style={{
+                  borderRadius: 50 
+                }}
+                rows={rows}
+                columns={columns} />
+            </div>
           </div>
+        </Box>
+      </Grid>
+      <Modal
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      className={classes.modal}
+      open={open}
+      onClose={handleClose}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+    >
+      <Fade in={open}>
+        <div className={classes.paper}>
+          <h2 id="transition-modal-title">Transition modal</h2>
+          <p id="transition-modal-description">{selectedRow}</p>
         </div>
-      </Box>
-    </Grid>
+      </Fade>
+    </Modal>
+  </div>
   );
 }

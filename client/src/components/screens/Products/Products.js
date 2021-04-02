@@ -48,17 +48,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CategoryOptions = () => {
-  let history = useHistory();
-
+const CategoryOptions = ({ category, setCategory }) => {
   return (
     <>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <ButtonGroup orientation="vertical" variant="text">
-          <Button>Weights</Button>
-          <Button>Protein</Button>
-          <Button>Fitness Gear</Button>
-          <Button>All Products</Button>
+          <Button
+            onClick={() => {
+              setCategory("weights");
+            }}
+          >
+            Weights
+          </Button>
+          <Button
+            onClick={() => {
+              setCategory("protein");
+            }}
+          >
+            Protein
+          </Button>
+          <Button
+            onClick={() => {
+              setCategory("fitness gear");
+            }}
+          >
+            Fitness Gear
+          </Button>
+          <Button
+            onClick={() => {
+              setCategory(null);
+            }}
+          >
+            All Products
+          </Button>
         </ButtonGroup>
       </div>
     </>
@@ -88,6 +110,8 @@ const ProductOptionsMenu = ({
   setCategory,
   filterPrice,
   setFilterPrice,
+  sortBy,
+  setSortBy,
 }) => {
   const styles = {
     borderRadius: 15,
@@ -237,9 +261,10 @@ export default function Products() {
           {products.length ? (
             products
               .filter((product) => {
-                console.log(category, product["category"]);
+                // console.log(category, product["category"]);
                 return (
-                  // product["category"].toLowerCase() === category &&
+                  product["category"].toLowerCase() ===
+                    (category ? category : product["category"].toLowerCase()) &&
                   product["price"] <= filterPrice[1] &&
                   product["price"] >= filterPrice[0]
                 );

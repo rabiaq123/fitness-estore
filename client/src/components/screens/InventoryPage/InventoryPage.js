@@ -3,9 +3,10 @@ import {
   Paper,
   Button,
   IconButton,
-  Modal, 
+  Modal,
   Backdrop,
-  Fade
+  Fade,
+  TextField
 } from "@material-ui/core";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
@@ -21,6 +22,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import PaginationItem from '@material-ui/lab/PaginationItem';
 import './InventoryPage.css'
 
+// Styling used in this page
 const useStyles = makeStyles((theme) => ({
   root: {
     flexDirection: 'column',
@@ -101,6 +103,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// Creating a custom display which is shown when there are no rows in the database 
 function CustomNoRowsOverlay() {
   const classes = useStyles();
 
@@ -150,6 +153,7 @@ function CustomNoRowsOverlay() {
   );
 }
 
+// Creating a custom pagination function
 function CustomPagination() {
   const { state, apiRef } = useGridSlotComponentProps();
 
@@ -174,7 +178,6 @@ export default function InventoryTable() {
   const history = useHistory();
   const [open, setOpen] = React.useState(false);
   const [selectedRow, getRow] = React.useState(false);
-  // let selectedRow = []
 
   let handleSearch = (event) => {
     if (event.key !== "Enter") return;
@@ -187,10 +190,12 @@ export default function InventoryTable() {
   //   setOpen(true);
   // };
 
+  // Closes the edit modal
   const handleClose = () => {
     setOpen(false);
   };
 
+  // Sets the columns (and their data) of the table 
   const columns = [
     { field: 'id', headerName: 'Product ID', flex: 0.5 },
     { field: 'product_name', headerName: 'Product Name', flex: 1 },
@@ -202,8 +207,12 @@ export default function InventoryTable() {
       flex: 1,
       headerName: "Actions",
       disableClickEventBubbling: true,
+
+      // Creating the 2 button functions that will be in the actions column
       renderCell: (params) => {
+        // Function for clicking the edit button for a specific row
         const openModal = () => {
+          // Retrieving data for that row
           const api: GridApi = params.api;
           const fields = api
             .getAllColumns()
@@ -214,11 +223,12 @@ export default function InventoryTable() {
           fields.forEach((field) => {
             thisRow[field] = params.getValue(field);
           });
-          setOpen(true);
+
+          // Set the selected row data
           getRow(JSON.stringify(thisRow, null, 4));
-          // this.setState({
-          //   selectedRow: JSON.stringify(thisRow, null, 4)
-          // });
+
+          // Open modal
+          setOpen(true);
           return;
         };
 
@@ -234,6 +244,7 @@ export default function InventoryTable() {
     },
   ];
 
+  // Test data
   const rows = [
     { id: 15134, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
     { id: 14624, product_name: 'Dumbells 15Lb', category: 'Weights', quantity: 35, price: 130 },
@@ -291,14 +302,14 @@ export default function InventoryTable() {
         </Box>
         <Box gridArea="inventory-table">
           <div style={{ height: '100%', width: '100%', display: 'flex' }}>
-            <div style={{ flexGrow: 1}}>
+            <div style={{ flexGrow: 1 }}>
               <DataGrid
                 components={{
                   NoRowsOverlay: CustomNoRowsOverlay,
                   Pagination: CustomPagination
                 }}
                 style={{
-                  borderRadius: 50 
+                  borderRadius: 50
                 }}
                 rows={rows}
                 columns={columns} />
@@ -306,25 +317,71 @@ export default function InventoryTable() {
           </div>
         </Box>
       </Grid>
+
+
+      
       <Modal
-      aria-labelledby="transition-modal-title"
-      aria-describedby="transition-modal-description"
-      className={classes.modal}
-      open={open}
-      onClose={handleClose}
-      closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
-    >
-      <Fade in={open}>
-        <div className={classes.paper}>
-          <h2 id="transition-modal-title">Transition modal</h2>
-          <p id="transition-modal-description">{selectedRow}</p>
-        </div>
-      </Fade>
-    </Modal>
-  </div>
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open}>
+          <Grid
+            backgroundColor="theme.palette.background.paper"
+            justify="stretch"
+            justifyContent="center"
+            rows={["xxsmall", "630px"]}
+            columns={["0.25fr", ".75fr"]}
+            gap="large"
+            areas={[
+              { name: "test", start: [0, 0], end: [1, 0] },
+              { name: "stuff", start: [0, 1], end: [1, 1] },
+            ]}
+            style={{ margin: 50, marginLeft: 50, marginRight: 50 }}
+          >
+            <Box gridArea="stuff">
+              <form>
+                <Grid container alignItems="flex-end" spacing={2}>
+                  <Paper style={{ padding: 16 }}>
+                    <Grid item xs={6}>
+                      <TextField
+                        id="firstName"
+                        label="Full Name"
+                        defaultValue={selectedRow}
+                        type="text"
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        id="LastName"
+                        label="Last Name"
+                        defaultValue=" "
+                        type="text"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        id="Email"
+                        label="Email"
+                        defaultValue=" "
+                        type="text"
+                      />
+                    </Grid>
+                  </Paper>
+
+                </Grid>
+              </form>
+            </Box>
+          </Grid>
+        </Fade>
+      </Modal>
+    </div>
   );
 }

@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Link, useHistory, useLocation } from "react-router-dom";
+
 import {
   Paper,
   Button,
@@ -7,17 +10,21 @@ import {
   Modal,
   Backdrop,
   Fade,
-  TextField
+  TextField,
+  Typography,
+  InputBase
 } from "@material-ui/core";
-import { fade, makeStyles } from "@material-ui/core/styles";
-import Typography from '@material-ui/core/Typography';
-import InputBase from "@material-ui/core/InputBase";
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import { fade, makeStyles, withStyles } from "@material-ui/core/styles";
 import { Grid, Box } from "grommet";
-import axios from "axios";
-import { Link, useHistory, useLocation } from "react-router-dom";
 import SearchIcon from "@material-ui/icons/Search";
 import EditIcon from '@material-ui/icons/Edit';
+import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
+import SaveIcon from '@material-ui/icons/Save';
 import { GridOverlay, DataGrid, useGridSlotComponentProps } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
 import PaginationItem from '@material-ui/lab/PaginationItem';
@@ -94,13 +101,48 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  // Modal Styling components
+  // Modal Components
   modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    minWidth: 500,
+    minHeight: 600,
+    borderRadius: 20
+  },
+  saveButton: {
+    borderRadius: "50%",
+    backgroundColor: "#FE646F",
+    "&:hover": {
+      backgroundColor: fade('#FE646F', 0.80),
+    },
+    padding: 10,
+  },
+  saveIcon: {
+    color: "white",
+    size: 'small'
   },
 }));
+
+const styles = (theme) => ({
+  rootModal: {
+    margin: 0,
+    // borderRadius: 15,
+    padding: theme.spacing(2),
+    backgroundColor: "#FE646F",
+    fontWeight: 600
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: "white",
+  },
+  titleText: {
+    fontWeight: 600,
+    color: 'white'
+  },
+  globalModal: {
+    borderRadius: 20
+  }
+});
 
 // Creating a custom display which is shown when there are no rows in the database 
 function CustomNoRowsOverlay() {
@@ -180,6 +222,38 @@ function CustomLoadingOverlay() {
   );
 }
 
+
+/** 
+ * Modal functions 
+ **/
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.rootModal} classes={{ root: 'borderTopRadius' }} {...other}>
+      <Typography variant="h6" className={classes.titleText}>{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+const DialogContent = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiDialogContent);
+
+const DialogActions = withStyles((theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(1),
+  },
+}))(MuiDialogActions);
+
 export default function InventoryTable() {
   const classes = useStyles();
   const history = useHistory();
@@ -255,8 +329,8 @@ export default function InventoryTable() {
           });
 
           // Set the selected row data
-          getRow(JSON.stringify(thisRow, null, 4));
-
+          getRow(thisRow);
+          console.log(thisRow)
           // Open modal
           setOpen(true);
           return;
@@ -348,9 +422,57 @@ export default function InventoryTable() {
         </Box>
       </Grid>
 
+      <Dialog
+        fullWidth={true}
+        maxWidth='md'
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+        classes={{
+          paper: classes.modal
+        }}>
+        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+          Edit Product  #{selectedRow.id}
+        </DialogTitle>
+        <DialogContent dividers>
+          <form>
+            <Grid container alignItems="flex-end" spacing={2}>
+              <Grid item xs={6}>
+                <TextField
+                  id="firstName"
+                  label="Full Name"
+                  defaultValue={selectedRow.product_name}
+                  type="text"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id="LastName"
+                  label="Last Name"
+                  defaultValue=" "
+                  type="text"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="Email"
+                  label="Email"
+                  defaultValue=" "
+                  type="text"
+                />
+              </Grid>
 
+            </Grid>
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <IconButton color="disabled" onClick={handleClose} className={classes.saveButton}>
+            <SaveIcon className={classes.saveIcon} />
+          </IconButton>
+        </DialogActions>
+      </Dialog>
 
-      <Modal
+      {/*  <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
@@ -364,7 +486,7 @@ export default function InventoryTable() {
       >
         <Fade in={open}>
           <Grid
-            backgroundColor="theme.palette.background.paper"
+            backgroundColor="#EFF0F6"
             justify="stretch"
             justifyContent="center"
             rows={["xxsmall", "630px"]}
@@ -412,6 +534,7 @@ export default function InventoryTable() {
           </Grid>
         </Fade>
       </Modal>
+     */}
     </div>
   );
 }

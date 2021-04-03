@@ -9,3 +9,8 @@
     position: relative;
     text-align: center;
 }
+
+.borderTopRadius {
+  border-top-left-radius: 20;
+  border-top-right-radius: 20;
+}

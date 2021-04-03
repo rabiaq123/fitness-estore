@@ -13,6 +13,7 @@ import {
   ButtonGroup,
   Button,
   Slider,
+  CircularProgress,
 } from "@material-ui/core";
 import { ExpandMore } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
@@ -31,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
     // height: "100%",
     // maxWidth: "1200px",
     borderRadius: 50,
+    minHeight: "100%",
     padding: 50,
     justifyContent: "space-evenly",
   },
@@ -47,6 +49,29 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
 }));
+
+const SortOptions = ({ sortBy, setSortBy }) => {
+  return (
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <ButtonGroup orientation="vertical" variant="text">
+        <Button
+          onClick={() => {
+            setSortBy(0);
+          }}
+        >
+          Low to High
+        </Button>
+        <Button
+          onClick={() => {
+            setSortBy(1);
+          }}
+        >
+          High to Low
+        </Button>
+      </ButtonGroup>
+    </div>
+  );
+};
 
 const CategoryOptions = ({ category, setCategory }) => {
   return (
@@ -122,7 +147,6 @@ const ProductOptionsMenu = ({
 
   return (
     <>
-      {/* Category selection accordion */}
       <Accordion style={styles}>
         <AccordionSummary expandIcon={<ExpandMore />}>
           <Typography>Categories</Typography>
@@ -131,7 +155,6 @@ const ProductOptionsMenu = ({
           <CategoryOptions category={category} setCategory={setCategory} />
         </AccordionDetails>
       </Accordion>
-      {/* Filter by price accordion */}
       <Accordion style={styles}>
         <AccordionSummary expandIcon={<ExpandMore />}>
           <Typography>Filter by Price</Typography>
@@ -143,12 +166,13 @@ const ProductOptionsMenu = ({
           />
         </AccordionDetails>
       </Accordion>
-      {/* Sort by price accordion */}
       <Accordion style={styles}>
         <AccordionSummary expandIcon={<ExpandMore />}>
           <Typography>Sort by Price</Typography>
         </AccordionSummary>
-        <AccordionDetails></AccordionDetails>
+        <AccordionDetails>
+          <SortOptions sortBy={sortBy} setSortBy={setSortBy} />
+        </AccordionDetails>
       </Accordion>
     </>
   );
@@ -199,12 +223,12 @@ export default function Products() {
   const { state } = useLocation();
   /*
    * SORT OPTIONS
-   *  Highest to lowest price = 0
-   *  Lowest to Highest price = 1
+   *  Lowest to Highest price = 0
+   *  Highest to lowest price = 1
    */
   const [sortBy, setSortBy] = useState(0);
-  const [products, setProducts] = useState([]);
-  const [filterPrice, setFilterPrice] = useState([0, 9000]);
+  const [products, setProducts] = useState(null);
+  const [filterPrice, setFilterPrice] = useState([0, 2000]);
   const [category, setCategory] = useState(null); // null = all products
 
   useEffect(() => {
@@ -258,7 +282,18 @@ export default function Products() {
       </Box>
       <Box gridArea="products-container">
         <Paper className={classes.productContainer} elevation={0}>
-          {products.length ? (
+          {!products && <CircularProgress />}
+          {products?.length === 0 && (
+            <div>
+              <Typography variant="h2">
+                Looks like there are no products like that...
+              </Typography>
+              <Typography variant="subtitle1" style={{ color: "grey" }}>
+                Maybe try another category or search for something else?
+              </Typography>
+            </div>
+          )}
+          {products?.length > 0 &&
             products
               .filter((product) => {
                 // console.log(category, product["category"]);
@@ -272,9 +307,19 @@ export default function Products() {
               .map((item, index) => {
                 return <ProductCard key={index} productItem={item} />;
               })
-          ) : (
-            <></>
-          )}
+              .sort((firstEl, secondEl) => {
+                let priceOne = firstEl.props.productItem.price;
+                let priceTwo = secondEl.props.productItem.price;
+
+                if (sortBy == 0) {
+                  // Lowest to highest
+                  console.log(firstEl, secondEl);
+                  return priceOne - priceTwo;
+                } else {
+                  // Highest to lowest
+                  return priceTwo - priceOne;
+                }
+              })}
         </Paper>
       </Box>
     </Grid>

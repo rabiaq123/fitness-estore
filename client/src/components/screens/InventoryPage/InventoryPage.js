@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Paper,
   Button,
+  LinearProgress,
   IconButton,
   Modal,
   Backdrop,
@@ -24,7 +25,7 @@ import './InventoryPage.css'
 
 // Styling used in this page
 const useStyles = makeStyles((theme) => ({
-  root: {
+  gridOverlayRoot: {
     flexDirection: 'column',
     '& .ant-empty-img-1': {
       fill: theme.palette.type === 'light' ? '#aeb8c2' : '#262626',
@@ -43,15 +44,17 @@ const useStyles = makeStyles((theme) => ({
       fill: theme.palette.type === 'light' ? '#f5f5f5' : '#fff',
     },
   },
-  title_text: {
-    fontWeight: 600
-  },
   body_container: {
     backgroundColor: "#EFF0F6",
     height: "100%",
     width: "100%",
     borderRadius: 50,
   },
+  title_text: {
+    fontWeight: 600
+  },
+
+  // Searchbar Styling
   search: {
     position: "relative",
     borderRadius: 12,
@@ -90,16 +93,12 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
   },
+
+  // Modal Styling components
   modal: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  paper: {
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
   },
 }));
 
@@ -108,7 +107,7 @@ function CustomNoRowsOverlay() {
   const classes = useStyles();
 
   return (
-    <GridOverlay className={classes.root}>
+    <GridOverlay className={classes.gridOverlayRoot}>
       <svg
         width="120"
         height="100"
@@ -160,7 +159,6 @@ function CustomPagination() {
   return (
     <Pagination
       color="primary"
-      justify="center"
       variant="outlined"
       shape="rounded"
       page={state.pagination.page}
@@ -172,12 +170,40 @@ function CustomPagination() {
   );
 }
 
+function CustomLoadingOverlay() {
+  return (
+    <GridOverlay>
+      <div style={{ position: 'absolute', top: 0, width: '100%' }}>
+        <LinearProgress />
+      </div>
+    </GridOverlay>
+  );
+}
 
 export default function InventoryTable() {
   const classes = useStyles();
   const history = useHistory();
   const [open, setOpen] = React.useState(false);
-  const [selectedRow, getRow] = React.useState(false);
+  const [selectedRow, getRow] = React.useState({});
+  const [rows, loadRows] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    (async function getProducts() {
+      axios
+        .get("https://fitnova-server.herokuapp.com/API/getProducts?page=1")
+        .then((resp) => {
+          console.log(resp.data.message);
+          loadRows(resp.data.records);
+          console.log(rows);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })();
+    console.log(rows);
+  }, []);
 
   let handleSearch = (event) => {
     if (event.key !== "Enter") return;
@@ -186,9 +212,17 @@ export default function InventoryTable() {
     // history.push("/products", { searchInput: searchString });
   };
 
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
+  const currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'CAD',
+  });
+
+  const price = {
+    type: 'number',
+    // width: 130,
+    valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
+    cellClassName: 'font-tabular-nums',
+  };
 
   // Closes the edit modal
   const handleClose = () => {
@@ -197,17 +231,13 @@ export default function InventoryTable() {
 
   // Sets the columns (and their data) of the table 
   const columns = [
-    { field: 'id', headerName: 'Product ID', flex: 0.5 },
-    { field: 'product_name', headerName: 'Product Name', flex: 1 },
-    { field: 'category', headerName: 'Category', flex: 1 },
-    { field: 'quantity', headerName: 'Quantity', type: 'number', flex: 1 },
-    { field: 'price', headerName: 'Price', type: 'number', flex: 1 },
+    { field: 'id', headerName: 'Product ID', flex: 0.5, disableClickEventBubbling: true },
+    { field: 'product_name', headerName: 'Product Name', flex: 1, disableClickEventBubbling: true },
+    { field: 'category', headerName: 'Category', flex: 1, disableClickEventBubbling: true },
+    { field: 'quantity', headerName: 'Quantity', type: 'number', flex: 1, disableClickEventBubbling: true },
+    { field: 'price', headerName: 'Price', ...price, flex: 1, disableClickEventBubbling: true },
     {
-      field: "",
-      flex: 1,
-      headerName: "Actions",
-      disableClickEventBubbling: true,
-
+      field: "actions", flex: 1, headerName: "Actions", disableClickEventBubbling: true,
       // Creating the 2 button functions that will be in the actions column
       renderCell: (params) => {
         // Function for clicking the edit button for a specific row
@@ -245,12 +275,12 @@ export default function InventoryTable() {
   ];
 
   // Test data
-  const rows = [
+  const rowsTest = [
     { id: 15134, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
-    { id: 14624, product_name: 'Dumbells 15Lb', category: 'Weights', quantity: 35, price: 130 },
+    { id: 14624, product_name: 'Dumbells 15Lb', category: 'Weights', quantity: 35, price: 110 },
     { id: 16378, product_name: 'Dumbells 25Lb', category: 'Weights', quantity: 35, price: 130 },
-    { id: 16367, product_name: 'Protein Shake ', category: 'Protein', quantity: 20, price: 130 },
-    { id: 16358, product_name: 'Whey Protein', category: 'Protein', quantity: 25, price: 130 },
+    { id: 16367, product_name: 'Protein Shake ', category: 'Protein', quantity: 20, price: 54.50 },
+    { id: 16358, product_name: 'Whey Protein', category: 'Protein', quantity: 25, price: 30 },
     { id: 10649, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
     { id: 15783, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
     { id: 15270, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
@@ -300,26 +330,26 @@ export default function InventoryTable() {
             />
           </div>
         </Box>
-        <Box gridArea="inventory-table">
+        <Box gridArea="inventory-table" textAlign="center">
           <div style={{ height: '100%', width: '100%', display: 'flex' }}>
-            <div style={{ flexGrow: 1 }}>
+            <div style={{ flexGrow: 1, textAlign: 'center', justify: 'center' }}>
               <DataGrid
                 components={{
                   NoRowsOverlay: CustomNoRowsOverlay,
+                  LoadingOverlay: CustomLoadingOverlay,
                   Pagination: CustomPagination
                 }}
-                style={{
-                  borderRadius: 50
-                }}
+                loading={isLoading}
                 rows={rows}
-                columns={columns} />
+                columns={columns}
+                disableColumnMenu />
             </div>
           </div>
         </Box>
       </Grid>
 
 
-      
+
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

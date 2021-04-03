@@ -7,6 +7,7 @@ import {
   Menu,
   MenuItem,
   Toolbar,
+  IconButton,
 } from "@material-ui/core";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
@@ -76,10 +77,11 @@ const useStyles = makeStyles((theme) => ({
   },
   shoppingCartButton: {
     borderRadius: "50%",
-    padding: 25,
+    padding: 10,
   },
   shoppingCartIcon: {
     color: "white",
+    size: 'small'
   },
 }));
 
@@ -149,7 +151,7 @@ export default function Navbar() {
   return (
     <div className={classes.grow}>
       <AppBar position="static">
-        <Toolbar style={{ backgroundColor: "#FE646F", padding: 20 }}>
+        <Toolbar style={{ backgroundColor: "#FE646F", paddingLeft: 20, paddingTop: 10, paddingBottom: 10,}}>
           <Link to="/">
             <img height="50px" width="auto" src={fitnova} alt="Fitnova logo" />
           </Link>
@@ -166,9 +168,9 @@ export default function Navbar() {
               onKeyDown={handleSearch}
             />
           </div>
-          <Button className={classes.shoppingCartButton}>
-            <ShoppingCart className={classes.shoppingCartIcon} />
-          </Button>
+          <IconButton className={classes.shoppingCartButton}>
+            <ShoppingCart className={classes.shoppingCartIcon} size="small" />
+          </IconButton>
         </Toolbar>
         {productsMenu}
       </AppBar>

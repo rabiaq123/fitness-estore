@@ -258,6 +258,7 @@ export default function InventoryTable() {
   const [selectedRow, getRow] = React.useState({});
   const [rows, loadRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const baseURL = "https://fitnova-server.herokuapp.com/API"
 
   useEffect(() => {
     (async function getProducts() {
@@ -300,6 +301,21 @@ export default function InventoryTable() {
     setOpen(false);
   };
 
+  const updateProduct = () => {
+    console.log(selectedRow);
+    // axios({
+    //   method: "post",
+    //   url: baseURL + '/addData',
+    //   data: {
+    //     data: selectedRow
+    //   }
+    // }).then(response => {
+    //   console.log(response.data);
+    //   return response.data;
+    // }).catch(error => {
+    //   console.log(error.message);
+    // });
+  }
   // Sets the columns (and their data) of the table 
   const columns = [
     { field: 'id', headerName: 'Product ID', flex: 0.5, disableClickEventBubbling: true },
@@ -453,7 +469,7 @@ export default function InventoryTable() {
                 <TextField
                   id="firstName"
                   label="Full Name"
-                  defaultValue={selectedRow.product_name}
+                  value={selectedRow.product_name}
                   type="text"
                 />
               </Box>
@@ -461,7 +477,7 @@ export default function InventoryTable() {
                 <TextField
                   id="category"
                   label="category"
-                  defaultValue={selectedRow.category}
+                  value={selectedRow.category}
                   type="text"
                 />
               </Box>
@@ -469,7 +485,7 @@ export default function InventoryTable() {
                 <TextField
                   id="quantity"
                   label="quantity"
-                  defaultValue={selectedRow.quantity}
+                  value={selectedRow.quantity}
                   type="number"
                 />
               </Box>
@@ -477,7 +493,7 @@ export default function InventoryTable() {
                 <TextField
                   id="price"
                   label="price"
-                  defaultValue={selectedRow.price}
+                  value={selectedRow.price}
                   type="number"
                 />
               </Box>
@@ -488,7 +504,7 @@ export default function InventoryTable() {
                 <TextField
                   id="description"
                   label="description"
-                  defaultValue={selectedRow.product_description}
+                  value={selectedRow.product_description}
                   type="text"
                 />
               </Box>
@@ -496,7 +512,7 @@ export default function InventoryTable() {
                 <TextField
                   id="notes"
                   label="Additional Info"
-                  defaultValue={selectedRow.notes}
+                  value={selectedRow.notes}
                   type="text"
                 />
               </Box>
@@ -504,7 +520,7 @@ export default function InventoryTable() {
           </form>
         </DialogContent>
         <DialogActions>
-          <IconButton color="disabled" onClick={handleClose} className={classes.saveButton}>
+          <IconButton color="disabled" onClick={updateProduct} className={classes.saveButton}>
             <SaveIcon className={classes.saveIcon} />
           </IconButton>
         </DialogActions>

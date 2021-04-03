@@ -7,12 +7,10 @@ import {
   Button,
   LinearProgress,
   IconButton,
-  Modal,
-  Backdrop,
-  Fade,
   TextField,
   Typography,
-  InputBase
+  InputBase,
+  CardMedia
 } from "@material-ui/core";
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -28,7 +26,9 @@ import SaveIcon from '@material-ui/icons/Save';
 import { GridOverlay, DataGrid, useGridSlotComponentProps } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
 import PaginationItem from '@material-ui/lab/PaginationItem';
-import './InventoryPage.css'
+import './InventoryPage.css';
+import { Image } from "grommet";
+import testImg from "../../../assets/product_imgs/bowflex-selecttech-552-dumbbell-set.png";
 
 // Styling used in this page
 const useStyles = makeStyles((theme) => ({
@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
   modal: {
     minWidth: 500,
     minHeight: 600,
-    borderRadius: 20
+    borderRadius: 20,
   },
   saveButton: {
     borderRadius: "50%",
@@ -138,9 +138,6 @@ const styles = (theme) => ({
   titleText: {
     fontWeight: 600,
     color: 'white'
-  },
-  globalModal: {
-    borderRadius: 20
   }
 });
 
@@ -318,19 +315,19 @@ export default function InventoryTable() {
         const openModal = () => {
           // Retrieving data for that row
           const api: GridApi = params.api;
+
+          // Getting fields
           const fields = api
             .getAllColumns()
             .map((cols) => cols.field)
-            .filter((cols) => cols !== "__check__" && !!cols);
           const thisRow = {};
-
           fields.forEach((field) => {
             thisRow[field] = params.getValue(field);
           });
 
           // Set the selected row data
-          getRow(thisRow);
-          console.log(thisRow)
+          getRow(rows.find(row => row.id === thisRow['id']));
+          console.log(selectedRow)
           // Open modal
           setOpen(true);
           return;
@@ -436,32 +433,73 @@ export default function InventoryTable() {
         </DialogTitle>
         <DialogContent dividers>
           <form>
-            <Grid container alignItems="flex-end" spacing={2}>
-              <Grid item xs={6}>
+            <Grid
+              justify="stretch"
+              rows={["sm", "sm", "sm", "sm", "sm", "sm"]}
+              columns={["md", "md"]}
+              gap="small"
+              areas={[
+                { name: "name", start: [0, 0], end: [0, 0] },
+                { name: "category", start: [0, 1], end: [0, 1] },
+                { name: "quantity", start: [0, 2], end: [0, 2] },
+                { name: "price", start: [0, 3], end: [0, 3] },
+                { name: "image", start: [1, 0], end: [1, 3] },
+                { name: "description", start: [0, 4], end: [0, 4] },
+                { name: "additionalInfo", start: [0, 5], end: [0, 5] },
+              ]}
+              style={{ margin: 5 }}
+            >
+              <Box gridArea="name" textAlign="center">
                 <TextField
                   id="firstName"
                   label="Full Name"
                   defaultValue={selectedRow.product_name}
                   type="text"
                 />
-              </Grid>
-              <Grid item xs={6}>
+              </Box>
+              <Box gridArea="category" textAlign="center">
                 <TextField
-                  id="LastName"
-                  label="Last Name"
-                  defaultValue=" "
+                  id="category"
+                  label="category"
+                  defaultValue={selectedRow.category}
                   type="text"
                 />
-              </Grid>
-              <Grid item xs={12}>
+              </Box>
+              <Box gridArea="quantity" textAlign="center">
                 <TextField
-                  id="Email"
-                  label="Email"
-                  defaultValue=" "
+                  id="quantity"
+                  label="quantity"
+                  defaultValue={selectedRow.quantity}
+                  type="number"
+                />
+              </Box>
+              <Box gridArea="price" textAlign="center">
+                <TextField
+                  id="price"
+                  label="price"
+                  defaultValue={selectedRow.price}
+                  type="number"
+                />
+              </Box>
+              <Box gridArea="image" maxWidth="200" maxHeight="200">
+                {/* <Image fit="cover" src={testImg} /> */}
+              </Box>
+              <Box gridArea="description" textAlign="center">
+                <TextField
+                  id="description"
+                  label="description"
+                  defaultValue={selectedRow.product_description}
                   type="text"
                 />
-              </Grid>
-
+              </Box>
+              <Box gridArea="additionalInfo" textAlign="center">
+                <TextField
+                  id="notes"
+                  label="Additional Info"
+                  defaultValue={selectedRow.notes}
+                  type="text"
+                />
+              </Box>
             </Grid>
           </form>
         </DialogContent>
@@ -471,70 +509,6 @@ export default function InventoryTable() {
           </IconButton>
         </DialogActions>
       </Dialog>
-
-      {/*  <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          <Grid
-            backgroundColor="#EFF0F6"
-            justify="stretch"
-            justifyContent="center"
-            rows={["xxsmall", "630px"]}
-            columns={["0.25fr", ".75fr"]}
-            gap="large"
-            areas={[
-              { name: "test", start: [0, 0], end: [1, 0] },
-              { name: "stuff", start: [0, 1], end: [1, 1] },
-            ]}
-            style={{ margin: 50, marginLeft: 50, marginRight: 50 }}
-          >
-            <Box gridArea="stuff">
-              <form>
-                <Grid container alignItems="flex-end" spacing={2}>
-                  <Paper style={{ padding: 16 }}>
-                    <Grid item xs={6}>
-                      <TextField
-                        id="firstName"
-                        label="Full Name"
-                        defaultValue={selectedRow}
-                        type="text"
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        id="LastName"
-                        label="Last Name"
-                        defaultValue=" "
-                        type="text"
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        id="Email"
-                        label="Email"
-                        defaultValue=" "
-                        type="text"
-                      />
-                    </Grid>
-                  </Paper>
-
-                </Grid>
-              </form>
-            </Box>
-          </Grid>
-        </Fade>
-      </Modal>
-     */}
     </div>
   );
 }

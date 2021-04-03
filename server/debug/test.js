@@ -1,6 +1,6 @@
 const axios = require('axios');
-// const baseURL = "http://localhost:8080/api";
-const baseURL = "https://fitnova-server.herokuapp.com/api";
+const baseURL = "http://localhost:8080/api";
+// const baseURL = "https://fitnova-server.herokuapp.com/api";
 (function () {
   let JSONData = {
     tableName: 'PRODUCTS',
@@ -65,12 +65,11 @@ const baseURL = "https://fitnova-server.herokuapp.com/api";
     }],
   }
 
-  
   axios({
     method: "post",
-    url: baseURL + '/addData',
+    url: baseURL + '/updateData',
     data: {
-      data: JSONData
+      data: selectedRow
     }
   }).then(response => {
     console.log(response.data);
@@ -78,4 +77,17 @@ const baseURL = "https://fitnova-server.herokuapp.com/api";
   }).catch(error => {
     console.log(error.message);
   });
+  
+  // axios({
+  //   method: "post",
+  //   url: baseURL + '/addData',
+  //   data: {
+  //     data: JSONData
+  //   }
+  // }).then(response => {
+  //   console.log(response.data);
+  //   return response.data;
+  // }).catch(error => {
+  //   console.log(error.message);
+  // });
 })();

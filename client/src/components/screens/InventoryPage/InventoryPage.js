@@ -319,12 +319,16 @@ export default function InventoryTable() {
   }
 
   const updateProduct = () => {
-    console.log(selectedRow);
+    let JSONObject = {
+      tableName: 'PRODUCTS',
+      data: [selectedRow]
+    }
+    console.log(JSONObject);
     axios({
       method: "post",
       url: baseURL + '/updateData',
       data: {
-        data: selectedRow
+        data: JSONObject
       }
     }).then(response => {
       console.log(response.data);
@@ -360,7 +364,7 @@ export default function InventoryTable() {
           });
 
           // Set the selected row data
-          getRow(rows.find(row => row.id === thisRow['id']));
+          getRow(...rows.find(row => row.id === thisRow['id']));
           console.log(selectedRow)
           // Open modal
           setOpen(true);

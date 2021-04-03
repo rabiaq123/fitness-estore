@@ -132,7 +132,7 @@ const styles = (theme) => ({
   closeButton: {
     position: 'absolute',
     right: theme.spacing(1),
-    top: theme.spacing(1),
+    top: theme.spacing(1.5),
     color: "white",
   },
   titleText: {
@@ -228,7 +228,7 @@ const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.rootModal} classes={{ root: 'borderTopRadius' }} {...other}>
-      <Typography variant="h6" className={classes.titleText}>{children}</Typography>
+      <Typography variant="h4" className={classes.titleText}>{children}</Typography>
       {onClose ? (
         <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
           <CloseIcon />
@@ -301,20 +301,38 @@ export default function InventoryTable() {
     setOpen(false);
   };
 
+  const updateName = (event) => {
+    selectedRow.product_name = event.target.value
+  }
+
+  const updateQuantity = (event) => {
+    selectedRow.quantity = event.target.value
+  }
+  const updatePrice = (event) => {
+    selectedRow.price = event.target.value
+  }
+  const updateDesc = (event) => {
+    selectedRow.description = event.target.value
+  }
+  const updateNotes = (event) => {
+    selectedRow.notes = event.target.value
+  }
+
   const updateProduct = () => {
     console.log(selectedRow);
-    // axios({
-    //   method: "post",
-    //   url: baseURL + '/addData',
-    //   data: {
-    //     data: selectedRow
-    //   }
-    // }).then(response => {
-    //   console.log(response.data);
-    //   return response.data;
-    // }).catch(error => {
-    //   console.log(error.message);
-    // });
+    axios({
+      method: "post",
+      url: baseURL + '/updateData',
+      data: {
+        data: selectedRow
+      }
+    }).then(response => {
+      console.log(response.data);
+      return response.data;
+    }).catch(error => {
+      console.log(error.message);
+    });
+    handleClose();
   }
   // Sets the columns (and their data) of the table 
   const columns = [
@@ -460,8 +478,8 @@ export default function InventoryTable() {
                 { name: "quantity", start: [0, 2], end: [0, 2] },
                 { name: "price", start: [0, 3], end: [0, 3] },
                 { name: "image", start: [1, 0], end: [1, 3] },
-                { name: "description", start: [0, 4], end: [0, 4] },
-                { name: "additionalInfo", start: [0, 5], end: [0, 5] },
+                { name: "description", start: [0, 4], end: [1, 4] },
+                { name: "additionalInfo", start: [0, 5], end: [1, 5] },
               ]}
               style={{ margin: 5 }}
             >
@@ -469,15 +487,16 @@ export default function InventoryTable() {
                 <TextField
                   id="firstName"
                   label="Full Name"
-                  value={selectedRow.product_name}
+                  defaultValue={selectedRow.product_name}
                   type="text"
+                  onChange={updateName}
                 />
               </Box>
               <Box gridArea="category" textAlign="center">
                 <TextField
                   id="category"
                   label="category"
-                  value={selectedRow.category}
+                  defaultValue={selectedRow.category}
                   type="text"
                 />
               </Box>
@@ -485,16 +504,18 @@ export default function InventoryTable() {
                 <TextField
                   id="quantity"
                   label="quantity"
-                  value={selectedRow.quantity}
+                  defaultValue={selectedRow.quantity}
                   type="number"
+                  onChange={updateQuantity}
                 />
               </Box>
               <Box gridArea="price" textAlign="center">
                 <TextField
                   id="price"
                   label="price"
-                  value={selectedRow.price}
+                  defaultValue={selectedRow.price}
                   type="number"
+                  onChange={updatePrice}
                 />
               </Box>
               <Box gridArea="image" maxWidth="200" maxHeight="200">
@@ -504,16 +525,18 @@ export default function InventoryTable() {
                 <TextField
                   id="description"
                   label="description"
-                  value={selectedRow.product_description}
+                  defaultValue={selectedRow.product_description}
                   type="text"
+                  onChange={updateDesc}
                 />
               </Box>
               <Box gridArea="additionalInfo" textAlign="center">
                 <TextField
                   id="notes"
                   label="Additional Info"
-                  value={selectedRow.notes}
+                  defaultValue={selectedRow.notes}
                   type="text"
+                  onChange={updateNotes}
                 />
               </Box>
             </Grid>

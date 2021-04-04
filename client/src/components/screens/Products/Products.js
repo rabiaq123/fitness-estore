@@ -7,10 +7,16 @@ import {
   CardContent,
   Typography,
   CardActions,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  ButtonGroup,
+  Button,
+  Slider,
 } from "@material-ui/core";
+import { ExpandMore } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Box } from "grommet";
-import ProductDetails from "../ProductDetails/ProductDetails";
 import axios from "axios";
 import { useLocation, useHistory } from "react-router-dom";
 import "./Products.css";
@@ -22,8 +28,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     flexWrap: "wrap",
     backgroundColor: "#EFF0F6",
-    height: "100%",
-    maxWidth: "1200px",
+    // height: "100%",
+    // maxWidth: "1200px",
     borderRadius: 50,
     padding: 50,
     justifyContent: "space-evenly",
@@ -35,18 +41,106 @@ const useStyles = makeStyles((theme) => ({
   productCardImage: {
     height: 140,
   },
+  optionsMenuContainer: {
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "column",
+  },
 }));
+
+const CategoryOptions = () => {
+  let history = useHistory();
+
+  return (
+    <>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <ButtonGroup orientation="vertical" variant="text">
+          <Button>Weights</Button>
+          <Button>Protein</Button>
+          <Button>Fitness Gear</Button>
+          <Button>All Products</Button>
+        </ButtonGroup>
+      </div>
+    </>
+  );
+};
+
+const FilterOptions = ({ filterPrice, setFilterPrice }) => {
+  const handleChange = (event, newValue) => {
+    setFilterPrice(newValue);
+  };
+
+  return (
+    <>
+      <Slider
+        min={0}
+        max={2000}
+        value={filterPrice}
+        valueLabelDisplay="auto"
+        onChange={handleChange}
+      />
+    </>
+  );
+};
+
+const ProductOptionsMenu = ({
+  category,
+  setCategory,
+  filterPrice,
+  setFilterPrice,
+}) => {
+  const styles = {
+    borderRadius: 15,
+    marginTop: 10,
+    marginBottom: 10,
+    maxWidth: 220,
+  };
+
+  return (
+    <>
+      {/* Category selection accordion */}
+      <Accordion style={styles}>
+        <AccordionSummary expandIcon={<ExpandMore />}>
+          <Typography>Categories</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <CategoryOptions category={category} setCategory={setCategory} />
+        </AccordionDetails>
+      </Accordion>
+      {/* Filter by price accordion */}
+      <Accordion style={styles}>
+        <AccordionSummary expandIcon={<ExpandMore />}>
+          <Typography>Filter by Price</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <FilterOptions
+            filterPrice={filterPrice}
+            setFilterPrice={setFilterPrice}
+          />
+        </AccordionDetails>
+      </Accordion>
+      {/* Sort by price accordion */}
+      <Accordion style={styles}>
+        <AccordionSummary expandIcon={<ExpandMore />}>
+          <Typography>Sort by Price</Typography>
+        </AccordionSummary>
+        <AccordionDetails></AccordionDetails>
+      </Accordion>
+    </>
+  );
+};
 
 const ProductCard = ({ productItem }) => {
   let history = useHistory();
 
-  console.log(productItem);
+  // console.log(productItem);
   // NOTE Gonna hardcode the images for now since they're null
   return (
     <Card
       style={{
         borderRadius: 25,
         maxWidth: 300,
+        // maxHeight: 260,
         marginTop: 10,
         marginBottom: 10,
         cursor: "pointer",
@@ -78,7 +172,7 @@ const ProductCard = ({ productItem }) => {
 
 export default function Products() {
   const classes = useStyles();
-  const location = useLocation();
+  const { state } = useLocation();
   /*
    * SORT OPTIONS
    *  Highest to lowest price = 0
@@ -86,10 +180,11 @@ export default function Products() {
    */
   const [sortBy, setSortBy] = useState(0);
   const [products, setProducts] = useState([]);
-  const [filters, setFilters] = useState([]);
+  const [filterPrice, setFilterPrice] = useState([0, 9000]);
   const [category, setCategory] = useState(null); // null = all products
 
   useEffect(() => {
+    console.log(state);
     // Call DB here for products
     axios
       .get("https://fitnova-server.herokuapp.com/API/getProducts?page=1")
@@ -99,8 +194,7 @@ export default function Products() {
       });
     // Filter by
     // return () => {};
-  }, []);
-  console.log(location);
+  }, [sortBy, filterPrice, category]);
 
   return (
     <Grid
@@ -118,20 +212,41 @@ export default function Products() {
       <Box gridArea="left-options">
         <Paper
           style={{
-            backgroundColor: "#EFF0F6",
+            backgroundColor: "white",
             height: "100%",
-            width: "100%",
+            maxWidth: 250,
             borderRadius: 50,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
           elevation={0}
-        ></Paper>
+        >
+          <ProductOptionsMenu
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            filterPrice={filterPrice}
+            setFilterPrice={setFilterPrice}
+            category={category}
+            setCategory={setCategory}
+          />
+        </Paper>
       </Box>
       <Box gridArea="products-container">
         <Paper className={classes.productContainer} elevation={0}>
           {products.length ? (
-            products.map((item, index) => {
-              return <ProductCard key={index} productItem={item} />;
-            })
+            products
+              .filter((product) => {
+                console.log(category, product["category"]);
+                return (
+                  // product["category"].toLowerCase() === category &&
+                  product["price"] <= filterPrice[1] &&
+                  product["price"] >= filterPrice[0]
+                );
+              })
+              .map((item, index) => {
+                return <ProductCard key={index} productItem={item} />;
+              })
           ) : (
             <></>
           )}

@@ -21,7 +21,7 @@ import { Grid, Box } from "grommet";
 import axios from "axios";
 import { useLocation, useHistory } from "react-router-dom";
 import "./Products.css";
-import image from "../../../assets/product_imgs/bowflex-selecttech-552-dumbbell-set.png";
+// import image from "../../../assets/product_imgs/bowflex-selecttech-552-dumbbell-set.png";
 
 const useStyles = makeStyles((theme) => ({
   productContainer: {
@@ -29,12 +29,12 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     flexWrap: "wrap",
     backgroundColor: "#EFF0F6",
-    // height: "100%",
-    // maxWidth: "1200px",
     borderRadius: 50,
-    minHeight: "100%",
     padding: 50,
-    justifyContent: "space-evenly",
+    gap: 20,
+    justifyContent: "center",
+    overflow: "auto",
+    minHeight: "90%",
   },
   productCard: {
     backgroundColor: "grey",
@@ -101,6 +101,13 @@ const CategoryOptions = ({ category, setCategory }) => {
           </Button>
           <Button
             onClick={() => {
+              setCategory("others");
+            }}
+          >
+            Others
+          </Button>
+          <Button
+            onClick={() => {
               setCategory(null);
             }}
           >
@@ -143,21 +150,22 @@ const ProductOptionsMenu = ({
     marginTop: 10,
     marginBottom: 10,
     maxWidth: 220,
+    backgroundColor: "#EFF0F6",
   };
 
   return (
     <>
-      <Accordion style={styles}>
+      <Accordion style={styles} elevation={0}>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>Categories</Typography>
+          <Typography><b>Categories</b></Typography>
         </AccordionSummary>
         <AccordionDetails>
           <CategoryOptions category={category} setCategory={setCategory} />
         </AccordionDetails>
       </Accordion>
-      <Accordion style={styles}>
+      <Accordion style={styles} elevation={0}>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>Filter by Price</Typography>
+          <Typography><b>Filter by Price</b></Typography>
         </AccordionSummary>
         <AccordionDetails>
           <FilterOptions
@@ -166,9 +174,9 @@ const ProductOptionsMenu = ({
           />
         </AccordionDetails>
       </Accordion>
-      <Accordion style={styles}>
+      <Accordion style={styles} elevation={0}>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>Sort by Price</Typography>
+          <Typography><b>Sort by Price</b></Typography>
         </AccordionSummary>
         <AccordionDetails>
           <SortOptions sortBy={sortBy} setSortBy={setSortBy} />
@@ -188,7 +196,7 @@ const ProductCard = ({ productItem }) => {
       style={{
         borderRadius: 25,
         maxWidth: 300,
-        // maxHeight: 260,
+        height: "fit-content",
         marginTop: 10,
         marginBottom: 10,
         cursor: "pointer",
@@ -198,8 +206,12 @@ const ProductCard = ({ productItem }) => {
       <CardActionArea>
         <CardMedia
           component="img"
-          image={image}
-          style={{ maxHeight: 140 }}
+          image={
+            productItem.image_url
+              ? `/product_imgs/${productItem.image_url}`
+              : "/no-image.png"
+          }
+          height={140}
           title={productItem.product_name}
         />
         <CardContent>
@@ -229,17 +241,20 @@ export default function Products() {
   const [sortBy, setSortBy] = useState(0);
   const [products, setProducts] = useState(null);
   const [filterPrice, setFilterPrice] = useState([0, 2000]);
-  const [category, setCategory] = useState(null); // null = all products
+  const [category, setCategory] = useState(
+    state?.category ? state.category : null
+  ); // null = all products
 
   useEffect(() => {
-    console.log(state);
     // Call DB here for products
     axios
-      .get("https://fitnova-server.herokuapp.com/API/getProducts?page=1")
+      .get("https://fitnova-server.herokuapp.com/API/getProducts")
       .then((resp) => {
-        console.log(resp);
+        // console.log(resp);
         setProducts(resp.data.records);
       });
+
+    document.title = "Products Page";
     // Filter by
     // return () => {};
   }, [sortBy, filterPrice, category]);
@@ -282,7 +297,7 @@ export default function Products() {
       </Box>
       <Box gridArea="products-container">
         <Paper className={classes.productContainer} elevation={0}>
-          {!products && <CircularProgress />}
+          {!products && <CircularProgress style={{ alignSelf: "center" }} />}
           {products?.length === 0 && (
             <div>
               <Typography variant="h2">
@@ -311,9 +326,8 @@ export default function Products() {
                 let priceOne = firstEl.props.productItem.price;
                 let priceTwo = secondEl.props.productItem.price;
 
-                if (sortBy == 0) {
+                if (sortBy === 0) {
                   // Lowest to highest
-                  console.log(firstEl, secondEl);
                   return priceOne - priceTwo;
                 } else {
                   // Highest to lowest

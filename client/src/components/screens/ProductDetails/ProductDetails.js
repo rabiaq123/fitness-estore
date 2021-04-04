@@ -64,7 +64,11 @@ export default function ProductDetails() {
               >
                 <div style={{ padding: 25 }}>
                   <Typography variant="h4" style={{ fontWeight: "bolder" }}>
-                    $ {productItem.price}
+                    ${" "}
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(productItem.price)}
                   </Typography>
                   <div
                     style={{

@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function AccountDetailsForm() {
+export default function PickupMethodForm() {
     
     const classes = useStyles();
 
@@ -30,9 +30,9 @@ export default function AccountDetailsForm() {
         console.log("event.target.value =", event.target.value);
     };
 
-    const renderLoginMethod = (option) => {
+    const renderDisplay = (option) => {
         //if path to image is null, then just display name in card
-        if (option === "Login") {
+        if (option === "Delivery") {
             return (
                 <form onSubmit={handleSubmit(onSubmit)}>
 
@@ -142,14 +142,14 @@ export default function AccountDetailsForm() {
                         <FormControl component="fieldset" >
                             <RadioGroup aria-label="quiz" name="quiz" value={value} onChange={handleRadioChange}>
                                 <div>
-                                    <FormControlLabel value="GuestCheckout" control={<Radio />} label="Guest Checkout" />
-                                    <FormControlLabel value="Login" control={<Radio />} label="Login" />
+                                    <FormControlLabel value="CurbsidePickup" control={<Radio />} label="Curbside Pickup" />
+                                    <FormControlLabel value="Delivery" control={<Radio />} label="Delivery" />
                                 </div>
                             </RadioGroup>
                         </FormControl>
                     </Grid>
 
-                    {renderLoginMethod(value)}
+                {renderDisplay(value)}
 
                 </Grid>
         </Container>

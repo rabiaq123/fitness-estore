@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -8,7 +8,8 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import AccountDetailsForm  from './AccountDetailsForm';
+import AccountDetailsForm from './AccountDetailsForm';
+import PickupMethodForm from './PickupMethodForm';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,28 +36,16 @@ function getSteps() {
     return ['Account Details', 'Delivery/Pickup Method', 'Billing Information', 'Review Order'];
 }
 
-// const state = {
-//     firstName: '',
-//     lastName: '',
-//     email: '',
-//     occupation: '',
-//     city: '',
-//     bio: ''
-// };
-// const values = { firstName, lastName, email, occupation, city, bio };
 
 function getStepContent(step) {
     switch (step) {
         case 0:
             return (
-                <AccountDetailsForm
-                    // handleChange={this.handleChange}
-                    // values={values}
-                />
+                <AccountDetailsForm/>
             )
         case 1:
             return (
-                <p>Add pickup form</p>
+                <PickupMethodForm/>
             )
         case 2:
             return (
@@ -73,13 +62,9 @@ function getStepContent(step) {
 
 export default function VerticalLinearStepper() {
 
-
-
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
-
-    // const { firstName, lastName, email, occupation, city, bio } = this.state;
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -92,12 +77,6 @@ export default function VerticalLinearStepper() {
     const handleReset = () => {
         setActiveStep(0);
     };
-
-    // Handle fields change
-    const handleChange = input => e => {
-        this.setState({ [input]: e.target.value });
-    };
-
 
     return (
         <div className={classes.root}>

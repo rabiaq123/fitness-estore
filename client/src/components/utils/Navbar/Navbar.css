@@ -1,0 +1,7 @@
+.menu_links {
+  text-decoration: none;
+}
+
+.menu_links:visited {
+  color: black;
+}

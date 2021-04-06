@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import {
   Paper,
-  Button,
   LinearProgress,
   IconButton,
   TextField,
@@ -200,11 +199,10 @@ function CustomPagination() {
       color="primary"
       variant="outlined"
       shape="rounded"
-      page={state.pagination.page}
+      page={state.pagination.page + 1}
       count={state.pagination.pageCount}
       // @ts-expect-error
-      renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
-      onChange={(event, value) => apiRef.current.setPage(value)}
+      onChange={(event, value) => apiRef.current.setPage(value - 1)}
     />
   );
 }
@@ -263,24 +261,54 @@ export default function InventoryTable() {
   useEffect(() => {
     (async function getProducts() {
       axios
-        .get("https://fitnova-server.herokuapp.com/API/getProducts?page=1")
+        .get("https://fitnova-server.herokuapp.com/API/getProducts")
         .then((resp) => {
-          console.log(resp.data.message);
+          // console.log(resp.data.message);
           loadRows(resp.data.records);
-          console.log(rows);
+          // console.log(rows);
           setIsLoading(false);
         })
         .catch((err) => {
           console.log(err);
         });
     })();
-    console.log(rows);
+    // console.log(rows);
   }, []);
 
   let handleSearch = (event) => {
     if (event.key !== "Enter") return;
+    setIsLoading(true);
     let searchString = event.target.value;
-    console.log(event.target.value);
+    console.log(searchString);
+    let JSONObject = {
+      tableName: 'PRODUCTS',
+      identifiers: {
+        product_name: "'" + searchString + "'"
+      }
+    }
+
+    JSON.stringify(JSONObject)
+    axios.get(baseURL + '/getData', {
+      params: {
+        data: JSON.stringify(JSONObject),
+      }
+    }).then(response => {
+      console.log(response.data.message);
+      console.log(response.data.rows);
+      if (response.data.rows.length != 0) {
+        console.log("here")
+        loadRows(response.data.rows);
+        console.log(rows);
+        setIsLoading(false);
+        return response.data;
+      } else {
+        loadRows([]);
+        setIsLoading(false);
+      }
+
+    }).catch(error => {
+      console.log(error.message);
+    });
     // history.push("/products", { searchInput: searchString });
   };
 
@@ -299,6 +327,7 @@ export default function InventoryTable() {
   // Closes the edit modal
   const handleClose = () => {
     setOpen(false);
+    console.log(rows);
   };
 
   const updateName = (event) => {
@@ -364,7 +393,7 @@ export default function InventoryTable() {
           });
 
           // Set the selected row data
-          getRow(...rows.find(row => row.id === thisRow['id']));
+          getRow(Object.assign({}, rows.find(row => row.id === thisRow['id'])));
           console.log(selectedRow)
           // Open modal
           setOpen(true);
@@ -372,10 +401,10 @@ export default function InventoryTable() {
         };
 
         return <div>
-          <IconButton color="disabled" onClick={openModal}>
+          <IconButton color="default" onClick={openModal}>
             <EditIcon />
           </IconButton>
-          <IconButton color="disabled" onClick={openModal}>
+          <IconButton color="default" onClick={openModal}>
             <DeleteIcon />
           </IconButton>
         </div>;
@@ -448,6 +477,9 @@ export default function InventoryTable() {
                   LoadingOverlay: CustomLoadingOverlay,
                   Pagination: CustomPagination
                 }}
+                // autoPageSize 
+                // pagination
+                pageSize={10}
                 loading={isLoading}
                 rows={rows}
                 columns={columns}
@@ -522,8 +554,13 @@ export default function InventoryTable() {
                   onChange={updatePrice}
                 />
               </Box>
-              <Box gridArea="image" maxWidth="200" maxHeight="200">
-                {/* <Image fit="cover" src={testImg} /> */}
+              <Box gridArea="image" maxWidth="300" maxHeight="300" align="center" marginTop="0" marginRight="0">
+                <CardMedia
+                  component="img"
+                  image={testImg}
+                  style={{ maxHeight: 300, maxWidth: 300, marginTop: 0, marginRight: 0, borderRadius: 20, borderColor: "grey" }}
+                  title={selectedRow.product_name}
+                ></CardMedia>
               </Box>
               <Box gridArea="description" textAlign="center">
                 <TextField

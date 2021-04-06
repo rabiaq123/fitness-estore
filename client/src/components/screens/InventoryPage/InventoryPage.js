@@ -333,24 +333,11 @@ export default function InventoryTable() {
   // Closes the edit modal
   const handleClose = () => {
     setOpen(false);
-    console.log(rows);
+    // console.log(rows);
   };
 
-  const updateName = (event) => {
-    selectedRow.product_name = event.target.value
-  }
-
-  const updateQuantity = (event) => {
-    selectedRow.quantity = event.target.value
-  }
-  const updatePrice = (event) => {
-    selectedRow.price = event.target.value
-  }
-  const updateDesc = (event) => {
-    selectedRow.description = event.target.value
-  }
-  const updateNotes = (event) => {
-    selectedRow.notes = event.target.value
+  const updateSelected = (prop) => (event) => {
+    getRow({ ...selectedRow, [prop]: event.target.value });
   }
 
   const updateProduct = () => {
@@ -416,25 +403,6 @@ export default function InventoryTable() {
         </div>;
       }
     },
-  ];
-
-  // Test data
-  const rowsTest = [
-    { id: 15134, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
-    { id: 14624, product_name: 'Dumbells 15Lb', category: 'Weights', quantity: 35, price: 110 },
-    { id: 16378, product_name: 'Dumbells 25Lb', category: 'Weights', quantity: 35, price: 130 },
-    { id: 16367, product_name: 'Protein Shake ', category: 'Protein', quantity: 20, price: 54.50 },
-    { id: 16358, product_name: 'Whey Protein', category: 'Protein', quantity: 25, price: 30 },
-    { id: 10649, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
-    { id: 15783, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
-    { id: 15270, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
-    { id: 12345, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
-    { id: 17479, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
-    // { id: 15357, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
-    // { id: 11111, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
-    // { id: 12462, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
-    // { id: 124, product_name: 'Dumbells 5Lb', category: 'Weights', quantity: 35, price: 130 },
-
   ];
 
   return (
@@ -541,7 +509,7 @@ export default function InventoryTable() {
                   label="Full Name"
                   defaultValue={selectedRow.product_name}
                   type="text"
-                  onChange={updateName}
+                  onChange={updateSelected('product_name')}
                 />
               </Box>
               <Box gridArea="category_label" textAlign="center">
@@ -554,6 +522,7 @@ export default function InventoryTable() {
                   label="category"
                   defaultValue={selectedRow.category}
                   type="text"
+                  onChange={updateSelected('category')}
                 />
               </Box>
 
@@ -567,7 +536,7 @@ export default function InventoryTable() {
                   label="quantity"
                   defaultValue={selectedRow.quantity}
                   type="number"
-                  onChange={updateQuantity}
+                  onChange={updateSelected('quantity')}
                 />
               </Box>
 
@@ -581,7 +550,7 @@ export default function InventoryTable() {
                     <OutlinedInput
                       id="outlined-adornment-weight"
                       value={selectedRow.price}
-                      onChange={updatePrice}
+                      onChange={updateSelected('price')}
                       endAdornment={<InputAdornment position="end">CAD$</InputAdornment>}
                       aria-describedby="outlined-weight-helper-text"
                       inputProps={{
@@ -611,7 +580,7 @@ export default function InventoryTable() {
                   label="description"
                   defaultValue={selectedRow.product_description}
                   type="text"
-                  onChange={updateDesc}
+                  onChange={updateSelected('description')}
                 />
               </Box>
 
@@ -625,7 +594,7 @@ export default function InventoryTable() {
                   label="Additional Info"
                   defaultValue={selectedRow.notes}
                   type="text"
-                  onChange={updateNotes}
+                  onChange={updateSelected('notes')}
                 />
               </Box>
 

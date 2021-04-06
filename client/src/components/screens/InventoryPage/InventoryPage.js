@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from "react";
 import clsx from 'clsx';
 import axios from "axios";
-import { useHistory } from "react-router-dom";
 
 import {
   LinearProgress,
   IconButton,
-  TextField,
   Typography,
   InputBase,
   CardMedia,
   FormControl,
   InputAdornment,
-  FormHelperText,
-  OutlinedInput
+  OutlinedInput,
 } from "@material-ui/core";
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -29,7 +26,6 @@ import SaveIcon from '@material-ui/icons/Save';
 import { GridOverlay, DataGrid, useGridSlotComponentProps } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
 import './InventoryPage.css';
-import { Image } from "grommet";
 import testImg from "../../../assets/product_imgs/bowflex-selecttech-552-dumbbell-set.png";
 
 // Styling used in this page
@@ -122,7 +118,12 @@ const useStyles = makeStyles((theme) => ({
     size: 'small'
   },
   modalLabels: {
-    fontWeight: 600
+    fontWeight: 600,
+    marginTop: 10
+  },
+  modalInputs: {
+    borderRadius: 20,
+    backgroundColor: fade(theme.palette.text.secondary, 0.05),
   }
 }));
 
@@ -191,7 +192,7 @@ function CustomNoRowsOverlay() {
           </g>
         </g>
       </svg>
-      <div className={classes.label}>No Rows</div>
+      <div className={classes.label}>No Data Found</div>
     </GridOverlay>
   );
 }
@@ -257,11 +258,11 @@ const DialogActions = withStyles((theme) => ({
 
 export default function InventoryTable() {
   const classes = useStyles();
-  const history = useHistory();
   const [open, setOpen] = React.useState(false);
   const [selectedRow, getRow] = React.useState({});
   const [rows, loadRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchFilter, setFilter] = useState("");
   const baseURL = "https://fitnova-server.herokuapp.com/API"
 
   useEffect(() => {
@@ -270,52 +271,29 @@ export default function InventoryTable() {
         .get("https://fitnova-server.herokuapp.com/API/getProducts")
         .then((resp) => {
           // console.log(resp.data.message);
-          loadRows(resp.data.records);
+          let data = resp.data.records;
+          if (searchFilter != null && data.length > 0) {
+            // console.log("here" + searchFilter)
+            data = data.filter(row => row.product_name.toLowerCase().includes(searchFilter.toLowerCase()));
+            setIsLoading(false);
+          }
+          // console.log(data)
+          loadRows(data);
           // console.log(rows);
-          setIsLoading(false);
         })
         .catch((err) => {
           console.log(err);
         });
     })();
-    // console.log(rows);
-  });
+  }, [searchFilter, rows])
+
 
   let handleSearch = (event) => {
     if (event.key !== "Enter") return;
     setIsLoading(true);
     let searchString = event.target.value;
-    console.log(searchString);
-    let JSONObject = {
-      tableName: 'PRODUCTS',
-      identifiers: {
-        product_name: "'" + searchString + "'"
-      }
-    }
-
-    JSON.stringify(JSONObject)
-    axios.get(baseURL + '/getData', {
-      params: {
-        data: JSON.stringify(JSONObject),
-      }
-    }).then(response => {
-      console.log(response.data.message);
-      console.log(response.data.rows);
-      if (response.data.rows.length != 0) {
-        console.log("here")
-        loadRows(response.data.rows);
-        console.log(rows);
-        setIsLoading(false);
-        return response.data;
-      } else {
-        loadRows([]);
-        setIsLoading(false);
-      }
-
-    }).catch(error => {
-      console.log(error.message);
-    });
-    // history.push("/products", { searchInput: searchString });
+    // console.log(searchString);
+    setFilter(searchString)
   };
 
   const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -333,7 +311,6 @@ export default function InventoryTable() {
   // Closes the edit modal
   const handleClose = () => {
     setOpen(false);
-    // console.log(rows);
   };
 
   const updateSelected = (prop) => (event) => {
@@ -355,6 +332,20 @@ export default function InventoryTable() {
     }).then(response => {
       console.log(response.data);
       return response.data;
+    }).catch(error => {
+      console.log(error.message);
+    });
+
+    // setIsLoading(true);
+    axios({
+      method: "get",
+      url: baseURL + '/getProducts',
+    }).then(response => {
+      console.log(response.data.message);
+      loadRows(response.data.records);
+      // setIsLoading(false);
+      console.log(rows);
+      setIsLoading(false);
     }).catch(error => {
       console.log(error.message);
     });
@@ -500,48 +491,70 @@ export default function InventoryTable() {
               style={{ margin: 5 }}
             >
               <Box gridArea="name_label" textAlign="center">
-                <Typography variant="h7" className={classes.modalLabels}>Product Name
+                <Typography className={classes.modalLabels}>Product Name
               </Typography>
               </Box>
               <Box gridArea="name" textAlign="center">
-                <TextField
-                  id="firstName"
-                  label="Full Name"
-                  defaultValue={selectedRow.product_name}
-                  type="text"
-                  onChange={updateSelected('product_name')}
-                />
+                <div>
+                  <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                    <OutlinedInput
+                      id="outlined-adornment-name"
+                      value={selectedRow.product_name}
+                      className={classes.modalInputs}
+                      onChange={updateSelected('product_name')}
+                      inputProps={{
+                        'aria-label': 'name',
+                      }}
+                      labelWidth={0}
+                    />
+                  </FormControl>
+                </div>
               </Box>
               <Box gridArea="category_label" textAlign="center">
-                <Typography variant="h7" className={classes.modalLabels}>Category
+                <Typography className={classes.modalLabels}>Category
               </Typography>
               </Box>
               <Box gridArea="category" textAlign="center">
-                <TextField
-                  id="category"
-                  label="category"
-                  defaultValue={selectedRow.category}
-                  type="text"
-                  onChange={updateSelected('category')}
-                />
+                <div>
+                  <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                    <OutlinedInput
+                      id="outlined-adornment-category"
+                      value={selectedRow.category}
+                      onChange={updateSelected('category')}
+                      className={classes.modalInputs}
+                      inputProps={{
+                        'aria-label': 'category',
+                      }}
+                      labelWidth={0}
+                    />
+                  </FormControl>
+                </div>
               </Box>
 
               <Box gridArea="quantity_label" textAlign="center">
-                <Typography variant="h7" className={classes.modalLabels}>Quantity
+                <Typography className={classes.modalLabels}>Quantity
               </Typography>
               </Box>
               <Box gridArea="quantity" textAlign="center">
-                <TextField
-                  id="quantity"
-                  label="quantity"
-                  defaultValue={selectedRow.quantity}
-                  type="number"
-                  onChange={updateSelected('quantity')}
-                />
+                <div>
+                  <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                    <OutlinedInput
+                      id="outlined-adornment-quantity"
+                      value={selectedRow.quantity}
+                      className={classes.modalInputs}
+                      onChange={updateSelected('quantity')}
+                      inputProps={{
+                        'aria-label': 'quantity',
+                      }}
+                      type="number"
+                      labelWidth={0}
+                    />
+                  </FormControl>
+                </div>
               </Box>
 
               <Box gridArea="price_label" textAlign="center">
-                <Typography variant="h7" className={classes.modalLabels}>Price
+                <Typography className={classes.modalLabels}>Price
               </Typography>
               </Box>
               <Box gridArea="price" textAlign="center">
@@ -550,52 +563,60 @@ export default function InventoryTable() {
                     <OutlinedInput
                       id="outlined-adornment-weight"
                       value={selectedRow.price}
+                      className={classes.modalInputs}
                       onChange={updateSelected('price')}
                       endAdornment={<InputAdornment position="end">CAD$</InputAdornment>}
                       aria-describedby="outlined-weight-helper-text"
                       inputProps={{
                         'aria-label': 'price',
                       }}
+                      type="number"
                       labelWidth={0}
                     />
-                    {/* <FormHelperText id="outlined-weight-helper-text">Weight</FormHelperText> */}
                   </FormControl>
-                  {/* <TextField
-                    id="price"
-                    label="price"
-                    defaultValue={selectedRow.price}
-                    type="number"
-                    onChange={updatePrice}
-                  /> */}
                 </div>
               </Box>
 
               <Box gridArea="description_label" textAlign="center">
-                <Typography variant="h7" className={classes.modalLabels}>Description
+                <Typography className={classes.modalLabels}>Description
               </Typography>
               </Box>
               <Box gridArea="description" textAlign="center">
-                <TextField
-                  id="description"
-                  label="description"
-                  defaultValue={selectedRow.product_description}
-                  type="text"
-                  onChange={updateSelected('description')}
-                />
+                <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                  <OutlinedInput
+                    id="outlined-adornment-description"
+                    value={selectedRow.product_description}
+                    className={classes.modalInputs}
+                    onChange={updateSelected('product_description')}
+                    inputProps={{
+                      'aria-label': 'description',
+                    }}
+                    multiline
+                    rows={3}
+                    labelWidth={0}
+                  />
+                </FormControl>
               </Box>
 
               <Box gridArea="additionalInfo_label" textAlign="center">
-                <Typography variant="h7" className={classes.modalLabels}>Additional Info
+                <Typography className={classes.modalLabels}>Additional Info
               </Typography>
               </Box>
               <Box gridArea="additionalInfo" textAlign="center">
-                <TextField
-                  id="notes"
-                  label="Additional Info"
-                  defaultValue={selectedRow.notes}
-                  type="text"
-                  onChange={updateSelected('notes')}
-                />
+                <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                  <OutlinedInput
+                    id="outlined-adornment-notes"
+                    value={selectedRow.notes}
+                    className={classes.modalInputs}
+                    onChange={updateSelected('notes')}
+                    inputProps={{
+                      'aria-label': 'notes',
+                    }}
+                    multiline
+                    rows={3}
+                    labelWidth={0}
+                  />
+                </FormControl>
               </Box>
 
               <Box gridArea="image" maxWidth="200" maxHeight="200" align="center" marginTop="0" marginRight="0">
@@ -610,7 +631,7 @@ export default function InventoryTable() {
           </form>
         </DialogContent>
         <DialogActions>
-          <IconButton color="disabled" onClick={updateProduct} className={classes.saveButton}>
+          <IconButton onClick={updateProduct} className={classes.saveButton}>
             <SaveIcon className={classes.saveIcon} />
           </IconButton>
         </DialogActions>

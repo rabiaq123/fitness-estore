@@ -11,11 +11,30 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormLabel from '@material-ui/core/FormLabel';
+import DateFnsUtils from '@date-io/date-fns';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+
+import {
+    MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+    KeyboardDatePicker,
+} from '@material-ui/pickers'
 
 
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: theme.spacing(3),
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 180,
+        marginTop: theme.spacing(2),
+
+    },
+    selectEmpty: {
+        marginTop: theme.spacing(2),
     },
 }));
 
@@ -28,6 +47,25 @@ export default function PickupMethodForm() {
     const handleRadioChange = (event) => {
         setValue(event.target.value);
         console.log("event.target.value =", event.target.value);
+    };
+
+    const [selectedDate, setSelectedDate] = React.useState(new Date('2021-04-08T21:11:54'));
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+    };
+
+    const [location, setLocation] = React.useState('');
+
+    const handleLocationChange = (event) => {
+        setLocation(event.target.value);
+    };
+
+
+    const [time, setTime] = React.useState('');
+
+    const handleTimeChange = (event) => {
+        setTime(event.target.value);
     };
 
     const renderDisplay = (option) => {
@@ -72,52 +110,71 @@ export default function PickupMethodForm() {
         } else {
             return (
                 <form>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={6}>
+                        <Grid container spacing={13}>
+                            <Grid item xs={12}>
+                                <Grid container spacing={1}>
 
-                                    <TextField fullWidth
-                                        name="firstName"
-                                        ref={register({ required: true, maxLength: 20 })}
-                                        label="First Name"
-                                        size="small"
-                                        variant="outlined"
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                        <TextField fullWidth
-                                            name="lastName"
-                                            ref={register({ required: true, maxLength: 20 })}
-                                            label="Last Name"
-                                            size="small"
-                                            variant="outlined"
+                                    <Grid item xs={4}>
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel id="Location">Location</InputLabel>
+                                            <Select
+                                                labelId="Location"
+                                                id="Location"
+                                                value={location}
+                                                onChange={handleLocationChange}
+                                                
+                                            >
+                                                <MenuItem value={"Toronto"}>22 Mill St, Toronto</MenuItem>
+                                                <MenuItem value={"Milton"}>19 Mavis Rd, Milton</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+
+                                    <Grid item xs={4}>
+
+                                        <KeyboardDatePicker
+                                            disableToolbar
+                                            variant="inline"
+                                            format="MM/dd/yyyy"
+                                            margin="normal"
+                                            id="pickupDate"
+                                            label="Date"
+                                            value={selectedDate}
+                                            onChange={handleDateChange}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
                                         />
-                                </Grid>
+                                    </Grid>
 
-                                <Grid item xs={12}>
-                                    <TextField fullWidth
-                                        name="email"
-                                        ref={register({ required: true, maxLength: 20 })}
-                                        label="Email"
-                                        size="small"
-                                        variant="outlined"
-                                    />
-                                </Grid>
-                                
-                                <Grid item xs={12}>
-                                    <TextField fullWidth
-                                        name="phoneNumber"
-                                        ref={register({ required: true, maxLength: 20 })}
-                                        label="Phone Number"
-                                        size="small"
-                                        variant="outlined"
-                                    />
+                                    <Grid item xs={4}>
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel id="Time">Time</InputLabel>
+                                            <Select
+                                                labelId="Time"
+                                                id="Time"
+                                                value={time}
+                                                onChange={handleTimeChange}
+
+                                            >
+                                                <MenuItem value={"8:00am - 8:30am"}>8:00am - 8:30am</MenuItem>
+                                                <MenuItem value={"9:00am - 9:30am"}>9:00am - 9:30am</MenuItem>
+                                                <MenuItem value={"10:30am - 11:00am"}>10:30am - 11:00am</MenuItem>
+                                                <MenuItem value={"10:00am - 11:30am"}>10:00am - 11:30am</MenuItem>
+                                                <MenuItem value={"1:00pm - 1:30pm"}>1:00pm - 1:30pm</MenuItem>
+                                                <MenuItem value={"1:30pm - 2:00pm"}>1:30pm - 2:00pm</MenuItem>
+                                                <MenuItem value={"2:00pm - 2:30pm"}>2:00pm - 2:30pm</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+
                                 </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
+                    </MuiPickersUtilsProvider>
+
                 </form>
             );
         }

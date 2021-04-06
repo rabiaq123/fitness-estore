@@ -29,8 +29,8 @@ function Checkout(props) {
                     Checkout
                 </Typography>
             </AppBar>
-            <Container >
-                <Stepper ></Stepper>
+            <Container>
+                <Stepper></Stepper>
             </Container>
         </div>
     );

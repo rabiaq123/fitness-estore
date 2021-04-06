@@ -10,11 +10,11 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import AccountDetailsForm from './AccountDetailsForm';
 import PickupMethodForm from './PickupMethodForm';
+import BillingForm from './BillingForm';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
-        
     },
     button: {
         // background: '#FE646F',
@@ -49,7 +49,7 @@ function getStepContent(step) {
             )
         case 2:
             return (
-                <p>Add billing form</p>
+                <BillingForm/>
             )
         case 3:
             return (

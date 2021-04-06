@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import clsx from 'clsx';
 import axios from "axios";
 
 import {
@@ -12,7 +11,8 @@ import {
   InputAdornment,
   OutlinedInput,
   MenuItem,
-  TextField
+  TextField,
+  Card
 } from "@material-ui/core";
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -126,6 +126,29 @@ const useStyles = makeStyles((theme) => ({
   modalInputs: {
     borderRadius: 20,
     backgroundColor: fade(theme.palette.text.secondary, 0.05),
+  },
+  modalImg: {
+    // maxHeight: 200,
+    // height: 200,
+    // maxWidth: 200,
+    marginTop: 0,
+    marginRight: 0,
+    borderRadius: 25,
+    // borderColor: "blue"
+  },
+  editButtonModal: {
+    position: "relative",
+    borderRadius: "50%",
+    backgroundColor: "#FE646F",
+    "&:hover": {
+      backgroundColor: fade('#FE646F', 0.80),
+    },
+    left: "315px",
+    bottom: "30px"
+  },
+  editIconModal: {
+    color: "white",
+    size: 'small'
   }
 }));
 
@@ -257,7 +280,6 @@ const DialogActions = withStyles((theme) => ({
     padding: theme.spacing(1),
   },
 }))(MuiDialogActions);
-
 
 const category = [
   {
@@ -403,11 +425,16 @@ export default function InventoryTable() {
           return;
         };
 
+        const openDeleteModal = () => {
+
+          return;
+        };
+
         return <div>
           <IconButton color="default" onClick={openModal}>
             <EditIcon />
           </IconButton>
-          <IconButton color="default" onClick={openModal}>
+          <IconButton color="default" onClick={openDeleteModal}>
             <DeleteIcon />
           </IconButton>
         </div>;
@@ -515,7 +542,7 @@ export default function InventoryTable() {
               </Box>
               <Box gridArea="name" textAlign="center">
                 <div>
-                  <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                  <FormControl variant="outlined">
                     <OutlinedInput
                       id="outlined-adornment-name"
                       value={selectedRow.product_name}
@@ -561,7 +588,7 @@ export default function InventoryTable() {
               </Box>
               <Box gridArea="quantity" textAlign="center">
                 <div>
-                  <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                  <FormControl variant="outlined">
                     <OutlinedInput
                       id="outlined-adornment-quantity"
                       value={selectedRow.quantity}
@@ -583,7 +610,7 @@ export default function InventoryTable() {
               </Box>
               <Box gridArea="price" textAlign="center">
                 <div>
-                  <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                  <FormControl variant="outlined">
                     <OutlinedInput
                       id="outlined-adornment-weight"
                       value={selectedRow.price}
@@ -606,7 +633,7 @@ export default function InventoryTable() {
               </Typography>
               </Box>
               <Box gridArea="description" textAlign="center">
-                <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                <FormControl variant="outlined">
                   <OutlinedInput
                     id="outlined-adornment-description"
                     value={selectedRow.product_description}
@@ -627,7 +654,7 @@ export default function InventoryTable() {
               </Typography>
               </Box>
               <Box gridArea="additionalInfo" textAlign="center">
-                <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                <FormControl variant="outlined">
                   <OutlinedInput
                     id="outlined-adornment-notes"
                     value={selectedRow.notes}
@@ -644,12 +671,19 @@ export default function InventoryTable() {
               </Box>
 
               <Box gridArea="image" maxWidth="200" maxHeight="200" align="center" marginTop="0" marginRight="0">
-                <CardMedia
-                  component="img"
-                  image={testImg}
-                  style={{ maxHeight: 200, maxWidth: 200, marginTop: 0, marginRight: 0, borderRadius: 20, borderColor: "grey" }}
-                  title={selectedRow.product_name}
-                ></CardMedia>
+                <div>
+                  <Card classes={{ root: classes.modalImg }} variant="outlined">
+                    <CardMedia
+                      component="img"
+                      image={testImg}
+                      // className={classes.modalImg}
+                      title={selectedRow.product_name}
+                    ></CardMedia>
+                  </Card>
+                  <IconButton onClick={console.log("updated Image")} className={classes.editButtonModal}>
+                    <EditIcon className={classes.editIconModal} />
+                  </IconButton>
+                </div>
               </Box>
             </Grid>
           </form>
@@ -660,6 +694,29 @@ export default function InventoryTable() {
           </IconButton>
         </DialogActions>
       </Dialog>
+
+      {/* <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Deleting Product"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Let Google help apps determine location. This means sending anonymous location data to
+            Google, even when no apps are running.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Disagree
+          </Button>
+          <Button onClick={handleClose} color="primary" autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog> */}
     </div>
   );
 }

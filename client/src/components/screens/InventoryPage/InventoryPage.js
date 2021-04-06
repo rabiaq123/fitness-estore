@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
+import clsx from 'clsx';
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
 import {
-  Paper,
   LinearProgress,
   IconButton,
   TextField,
   Typography,
   InputBase,
-  CardMedia
+  CardMedia,
+  FormControl,
+  InputAdornment,
+  FormHelperText,
+  OutlinedInput
 } from "@material-ui/core";
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -24,7 +28,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import { GridOverlay, DataGrid, useGridSlotComponentProps } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
-import PaginationItem from '@material-ui/lab/PaginationItem';
 import './InventoryPage.css';
 import { Image } from "grommet";
 import testImg from "../../../assets/product_imgs/bowflex-selecttech-552-dumbbell-set.png";
@@ -118,6 +121,9 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     size: 'small'
   },
+  modalLabels: {
+    fontWeight: 600
+  }
 }));
 
 const styles = (theme) => ({
@@ -273,7 +279,7 @@ export default function InventoryTable() {
         });
     })();
     // console.log(rows);
-  }, []);
+  });
 
   let handleSearch = (event) => {
     if (event.key !== "Enter") return;
@@ -506,19 +512,29 @@ export default function InventoryTable() {
             <Grid
               justify="stretch"
               rows={["sm", "sm", "sm", "sm", "sm", "sm"]}
-              columns={["md", "md"]}
+              columns={["0.20fr", "0.40fr", "0.40fr"]}
               gap="small"
               areas={[
-                { name: "name", start: [0, 0], end: [0, 0] },
-                { name: "category", start: [0, 1], end: [0, 1] },
-                { name: "quantity", start: [0, 2], end: [0, 2] },
-                { name: "price", start: [0, 3], end: [0, 3] },
-                { name: "image", start: [1, 0], end: [1, 3] },
-                { name: "description", start: [0, 4], end: [1, 4] },
-                { name: "additionalInfo", start: [0, 5], end: [1, 5] },
+                { name: "name_label", start: [0, 0], end: [0, 0] },
+                { name: "name", start: [1, 0], end: [1, 0] },
+                { name: "category_label", start: [0, 1], end: [0, 1] },
+                { name: "category", start: [1, 1], end: [1, 1] },
+                { name: "quantity_label", start: [0, 2], end: [0, 2] },
+                { name: "quantity", start: [1, 2], end: [1, 2] },
+                { name: "price_label", start: [0, 3], end: [0, 3] },
+                { name: "price", start: [1, 3], end: [1, 3] },
+                { name: "image", start: [2, 0], end: [2, 3] },
+                { name: "description_label", start: [0, 4], end: [0, 4] },
+                { name: "description", start: [1, 4], end: [2, 4] },
+                { name: "additionalInfo_label", start: [0, 5], end: [0, 5] },
+                { name: "additionalInfo", start: [1, 5], end: [2, 5] },
               ]}
               style={{ margin: 5 }}
             >
+              <Box gridArea="name_label" textAlign="center">
+                <Typography variant="h7" className={classes.modalLabels}>Product Name
+              </Typography>
+              </Box>
               <Box gridArea="name" textAlign="center">
                 <TextField
                   id="firstName"
@@ -528,6 +544,10 @@ export default function InventoryTable() {
                   onChange={updateName}
                 />
               </Box>
+              <Box gridArea="category_label" textAlign="center">
+                <Typography variant="h7" className={classes.modalLabels}>Category
+              </Typography>
+              </Box>
               <Box gridArea="category" textAlign="center">
                 <TextField
                   id="category"
@@ -535,6 +555,11 @@ export default function InventoryTable() {
                   defaultValue={selectedRow.category}
                   type="text"
                 />
+              </Box>
+
+              <Box gridArea="quantity_label" textAlign="center">
+                <Typography variant="h7" className={classes.modalLabels}>Quantity
+              </Typography>
               </Box>
               <Box gridArea="quantity" textAlign="center">
                 <TextField
@@ -545,22 +570,40 @@ export default function InventoryTable() {
                   onChange={updateQuantity}
                 />
               </Box>
-              <Box gridArea="price" textAlign="center">
-                <TextField
-                  id="price"
-                  label="price"
-                  defaultValue={selectedRow.price}
-                  type="number"
-                  onChange={updatePrice}
-                />
+
+              <Box gridArea="price_label" textAlign="center">
+                <Typography variant="h7" className={classes.modalLabels}>Price
+              </Typography>
               </Box>
-              <Box gridArea="image" maxWidth="300" maxHeight="300" align="center" marginTop="0" marginRight="0">
-                <CardMedia
-                  component="img"
-                  image={testImg}
-                  style={{ maxHeight: 300, maxWidth: 300, marginTop: 0, marginRight: 0, borderRadius: 20, borderColor: "grey" }}
-                  title={selectedRow.product_name}
-                ></CardMedia>
+              <Box gridArea="price" textAlign="center">
+                <div>
+                  <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                    <OutlinedInput
+                      id="outlined-adornment-weight"
+                      value={selectedRow.price}
+                      onChange={updatePrice}
+                      endAdornment={<InputAdornment position="end">CAD$</InputAdornment>}
+                      aria-describedby="outlined-weight-helper-text"
+                      inputProps={{
+                        'aria-label': 'price',
+                      }}
+                      labelWidth={0}
+                    />
+                    {/* <FormHelperText id="outlined-weight-helper-text">Weight</FormHelperText> */}
+                  </FormControl>
+                  {/* <TextField
+                    id="price"
+                    label="price"
+                    defaultValue={selectedRow.price}
+                    type="number"
+                    onChange={updatePrice}
+                  /> */}
+                </div>
+              </Box>
+
+              <Box gridArea="description_label" textAlign="center">
+                <Typography variant="h7" className={classes.modalLabels}>Description
+              </Typography>
               </Box>
               <Box gridArea="description" textAlign="center">
                 <TextField
@@ -571,6 +614,11 @@ export default function InventoryTable() {
                   onChange={updateDesc}
                 />
               </Box>
+
+              <Box gridArea="additionalInfo_label" textAlign="center">
+                <Typography variant="h7" className={classes.modalLabels}>Additional Info
+              </Typography>
+              </Box>
               <Box gridArea="additionalInfo" textAlign="center">
                 <TextField
                   id="notes"
@@ -579,6 +627,15 @@ export default function InventoryTable() {
                   type="text"
                   onChange={updateNotes}
                 />
+              </Box>
+
+              <Box gridArea="image" maxWidth="200" maxHeight="200" align="center" marginTop="0" marginRight="0">
+                <CardMedia
+                  component="img"
+                  image={testImg}
+                  style={{ maxHeight: 200, maxWidth: 200, marginTop: 0, marginRight: 0, borderRadius: 20, borderColor: "grey" }}
+                  title={selectedRow.product_name}
+                ></CardMedia>
               </Box>
             </Grid>
           </form>

@@ -11,6 +11,8 @@ import {
   FormControl,
   InputAdornment,
   OutlinedInput,
+  MenuItem,
+  TextField
 } from "@material-ui/core";
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -256,6 +258,26 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
+
+const category = [
+  {
+    value: 'Others',
+    label: 'Others',
+  },
+  {
+    value: 'Weights',
+    label: 'Weights',
+  },
+  {
+    value: 'Protein',
+    label: 'Protein',
+  },
+  {
+    value: 'Fitness Gear',
+    label: 'Fitness Gear',
+  },
+];
+
 export default function InventoryTable() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -266,25 +288,23 @@ export default function InventoryTable() {
   const baseURL = "https://fitnova-server.herokuapp.com/API"
 
   useEffect(() => {
-    (async function getProducts() {
-      axios
-        .get("https://fitnova-server.herokuapp.com/API/getProducts")
-        .then((resp) => {
-          // console.log(resp.data.message);
-          let data = resp.data.records;
-          if (searchFilter != null && data.length > 0) {
-            // console.log("here" + searchFilter)
-            data = data.filter(row => row.product_name.toLowerCase().includes(searchFilter.toLowerCase()));
-            setIsLoading(false);
-          }
-          // console.log(data)
-          loadRows(data);
-          // console.log(rows);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    })();
+    axios
+      .get("https://fitnova-server.herokuapp.com/API/getProducts")
+      .then((resp) => {
+        // console.log(resp.data.message);
+        let data = resp.data.records;
+        if (searchFilter != null && data.length > 0) {
+          // console.log("here" + searchFilter)
+          data = data.filter(row => row.product_name.toLowerCase().includes(searchFilter.toLowerCase()));
+          setIsLoading(false);
+        }
+        // console.log(data)
+        loadRows(data);
+        // console.log(rows);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, [searchFilter, rows])
 
 
@@ -336,14 +356,13 @@ export default function InventoryTable() {
       console.log(error.message);
     });
 
-    // setIsLoading(true);
+    setIsLoading(true);
     axios({
       method: "get",
       url: baseURL + '/getProducts',
     }).then(response => {
       console.log(response.data.message);
       loadRows(response.data.records);
-      // setIsLoading(false);
       console.log(rows);
       setIsLoading(false);
     }).catch(error => {
@@ -515,20 +534,25 @@ export default function InventoryTable() {
               </Typography>
               </Box>
               <Box gridArea="category" textAlign="center">
-                <div>
-                  <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                    <OutlinedInput
-                      id="outlined-adornment-category"
-                      value={selectedRow.category}
-                      onChange={updateSelected('category')}
-                      className={classes.modalInputs}
-                      inputProps={{
-                        'aria-label': 'category',
-                      }}
-                      labelWidth={0}
-                    />
-                  </FormControl>
-                </div>
+                <TextField
+                  id="standard-select-currency-native"
+                  select
+                  value={selectedRow.category}
+                  InputProps={{
+                    classes: {
+                      root: classes.modalInputs,
+                    },
+                  }}
+                  // className={classes.modalInputs}
+                  onChange={updateSelected('category')}
+                  variant="outlined"
+                >
+                  {category.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Box>
 
               <Box gridArea="quantity_label" textAlign="center">

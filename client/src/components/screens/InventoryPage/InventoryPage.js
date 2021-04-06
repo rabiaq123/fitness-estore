@@ -12,7 +12,8 @@ import {
   OutlinedInput,
   MenuItem,
   TextField,
-  Card
+  Card,
+  Snackbar
 } from "@material-ui/core";
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -25,8 +26,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
+import CheckIcon from '@material-ui/icons/Check';
 import { GridOverlay, DataGrid, useGridSlotComponentProps } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
+import MuiAlert from '@material-ui/lab/Alert';
 import './InventoryPage.css';
 import testImg from "../../../assets/product_imgs/bowflex-selecttech-552-dumbbell-set.png";
 
@@ -149,7 +152,38 @@ const useStyles = makeStyles((theme) => ({
   editIconModal: {
     color: "white",
     size: 'small'
-  }
+  },
+  deleteModalTitle: {
+    margin: 0,
+    // borderRadius: 15,
+    padding: theme.spacing(2),
+    backgroundColor: "#FE646F",
+    fontWeight: 600
+  },
+  checkButton: {
+    borderRadius: "50%",
+    backgroundColor: "#319E1E",
+    "&:hover": {
+      backgroundColor: fade('#319E1E', 0.80),
+    },
+    padding: 10,
+  },
+  checkIcon: {
+    color: "white",
+    size: 'small'
+  },
+  cancelButton: {
+    borderRadius: "50%",
+    backgroundColor: "#a61b1b",
+    "&:hover": {
+      backgroundColor: fade('#a61b1b', 0.80),
+    },
+    padding: 10,
+  },
+  cancelIcon: {
+    color: "white",
+    size: 'small'
+  },
 }));
 
 const styles = (theme) => ({
@@ -281,6 +315,10 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const category = [
   {
     value: 'Others',
@@ -303,6 +341,11 @@ const category = [
 export default function InventoryTable() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [openDelete, setOpenDelete] = React.useState(false);
+  const [openSuccessDelete, setOpenSuccessDelete] = React.useState(false);
+  const [openErrorDelete, setOpenErrorDelete] = React.useState(false);
+  const [openSuccessUpdate, setOpenSuccessUpdate] = React.useState(false);
+  const [openErrorUpdate, setOpenErrorUpdate] = React.useState(false);
   const [selectedRow, getRow] = React.useState({});
   const [rows, loadRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -353,6 +396,11 @@ export default function InventoryTable() {
   // Closes the edit modal
   const handleClose = () => {
     setOpen(false);
+    setOpenDelete(false);
+    setOpenErrorDelete(false);
+    setOpenErrorUpdate(false);
+    setOpenSuccessDelete(false);
+    setOpenSuccessUpdate(false);
   };
 
   const updateSelected = (prop) => (event) => {
@@ -372,7 +420,45 @@ export default function InventoryTable() {
         data: JSONObject
       }
     }).then(response => {
+      setOpenSuccessUpdate(true);
       console.log(response.data);
+      return response.data;
+    }).catch(error => {
+      console.log(error.message);
+    });
+
+    setIsLoading(true);
+    axios({
+      method: "get",
+      url: baseURL + '/getProducts',
+    }).then(response => {
+      console.log(response.data.message);
+      loadRows(response.data.records);
+      console.log(rows);
+      setIsLoading(false);
+    }).catch(error => {
+      console.log(error.message);
+    });
+    handleClose();
+  }
+
+  const deleteProduct = () => {
+    let JSONObject = {
+      tableName: 'PRODUCTS',
+      identifiers: {
+        id: selectedRow.id
+      }
+    }
+    console.log(JSONObject);
+    axios({
+      method: "post",
+      url: baseURL + '/deleteData',
+      data: {
+        data: JSONObject
+      }
+    }).then(response => {
+      console.log(response.data);
+      setOpenSuccessDelete(true);
       return response.data;
     }).catch(error => {
       console.log(error.message);
@@ -394,13 +480,13 @@ export default function InventoryTable() {
   }
   // Sets the columns (and their data) of the table 
   const columns = [
-    { field: 'id', headerName: 'Product ID', flex: 0.5, disableClickEventBubbling: true },
-    { field: 'product_name', headerName: 'Product Name', flex: 1, disableClickEventBubbling: true },
-    { field: 'category', headerName: 'Category', flex: 1, disableClickEventBubbling: true },
-    { field: 'quantity', headerName: 'Quantity', type: 'number', flex: 1, disableClickEventBubbling: true },
-    { field: 'price', headerName: 'Price', ...price, flex: 1, disableClickEventBubbling: true },
+    { field: 'id', headerName: 'Product ID', flex: 0.5, disableClickEventBubbling: true, align: 'center' },
+    { field: 'product_name', headerName: 'Product Name', flex: 1, disableClickEventBubbling: true, align: 'center' },
+    { field: 'category', headerName: 'Category', flex: 1, disableClickEventBubbling: true, align: 'center' },
+    { field: 'quantity', headerName: 'Quantity', type: 'number', flex: 1, disableClickEventBubbling: true, align: 'center' },
+    { field: 'price', headerName: 'Price', ...price, flex: 1, disableClickEventBubbling: true, align: 'center' },
     {
-      field: "actions", flex: 1, headerName: "Actions", disableClickEventBubbling: true,
+      field: "actions", flex: 1, align: 'center', headerName: "Actions", disableClickEventBubbling: true,
       // Creating the 2 button functions that will be in the actions column
       renderCell: (params) => {
         // Function for clicking the edit button for a specific row
@@ -426,11 +512,27 @@ export default function InventoryTable() {
         };
 
         const openDeleteModal = () => {
+          // Retrieving data for that row
+          const api: GridApi = params.api;
 
+          // Getting fields
+          const fields = api
+            .getAllColumns()
+            .map((cols) => cols.field)
+          const thisRow = {};
+          fields.forEach((field) => {
+            thisRow[field] = params.getValue(field);
+          });
+
+          // Set the selected row data
+          getRow(Object.assign({}, rows.find(row => row.id === thisRow['id'])));
+          console.log(selectedRow)
+
+          setOpenDelete(true);
           return;
         };
 
-        return <div>
+        return <div align='center'>
           <IconButton color="default" onClick={openModal}>
             <EditIcon />
           </IconButton>
@@ -680,7 +782,7 @@ export default function InventoryTable() {
                       title={selectedRow.product_name}
                     ></CardMedia>
                   </Card>
-                  <IconButton onClick={console.log("updated Image")} className={classes.editButtonModal}>
+                  <IconButton onClick={handleClose} className={classes.editButtonModal}>
                     <EditIcon className={classes.editIconModal} />
                   </IconButton>
                 </div>
@@ -695,28 +797,45 @@ export default function InventoryTable() {
         </DialogActions>
       </Dialog>
 
-      {/* <Dialog
-        open={open}
+      <Dialog
+        open={openDelete}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Deleting Product"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Delete this product?"}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending anonymous location data to
-            Google, even when no apps are running.
-          </DialogContentText>
+
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Disagree
-          </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
-            Agree
-          </Button>
+          <IconButton onClick={handleClose} className={classes.cancelButton}>
+            <CloseIcon className={classes.cancelIcon} />
+          </IconButton>
+          <IconButton onClick={deleteProduct} className={classes.checkButton}>
+            <CheckIcon className={classes.checkIcon} />
+          </IconButton>
         </DialogActions>
-      </Dialog> */}
+      </Dialog>
+      <Snackbar open={openSuccessDelete} autoHideDuration={5000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Product Successfully Deleted!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={openErrorDelete} autoHideDuration={5000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error">
+          An error occurred when deleting. Couldn't delete product.
+        </Alert>
+      </Snackbar>
+      <Snackbar open={openSuccessUpdate} autoHideDuration={5000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Product Successfully Updated!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={openErrorUpdate} autoHideDuration={5000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error">
+          An error occurred when updating. Couldn't update product.
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

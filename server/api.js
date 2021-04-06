@@ -29,30 +29,30 @@ const status = {
  *  @returns records -> list of 10 paginated product rows
  */
 router.get('/getProducts', (req, res) => {
-    const page = parseInt(req.query.page);
-    const limit = 10;
+    // const page = parseInt(req.query.page);
+    // const limit = 10;
 
     // Setting indexes for pagination
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    let previous, next;
-    if (startIndex > 0) {
-        previous = page - 1;
-    };
+    // const startIndex = (page - 1) * limit;
+    // const endIndex = page * limit;
+    // let previous, next;
+    // if (startIndex > 0) {
+    //     previous = page - 1;
+    // };
 
     (async function () {
         try {
             let result = await DBRunner(queryStringBuilder('SELECT', 'PRODUCTS', [], []), []);
             let rows = result.rows;
-            if (endIndex < rows.length) {
-                next = page + 1;
-            }
+            // if (endIndex < rows.length) {
+            //     next = page + 1;
+            // }
             res.status(status.success).send({
                 message: "successfully retrieved " + rows.length + " product(s)",
-                records: rows.slice(startIndex, endIndex),
-                pageCount: Math.ceil(rows.length / limit),
-                next: next,
-                previous: previous
+                records: rows/* .slice(startIndex, endIndex) */,
+                // pageCount: Math.ceil(rows.length / limit),
+                // next: next,
+                // previous: previous
             });
         } catch (error) {
             res.status(status.error).send(error.message);

@@ -263,7 +263,7 @@ export default function Products() {
     <Grid
       justify="stretch"
       // fill="horizontal"
-      rows={["204px", "204px"]}
+      rows={["384px", "384px"]}
       columns={["0.25fr", ".75fr"]}
       gap="xlarge"
       areas={[

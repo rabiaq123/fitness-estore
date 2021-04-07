@@ -9,7 +9,7 @@ import Navbar from "./components/utils/Navbar/Navbar";
 
 export default function Router() {
   return (
-    <div>
+    <div style={{ marginBottom: 100 }}>
       <BrowserRouter>
         <Navbar />
         <Switch>

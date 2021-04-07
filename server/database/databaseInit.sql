@@ -1,6 +1,6 @@
 CREATE TABLE PRODUCTS
 (
-	product_id SERIAL NOT NULL PRIMARY KEY  ,
+	id SERIAL NOT NULL PRIMARY KEY  ,
 	product_name varchar(256) NOT NULL DEFAULT ''   ,
 	product_description varchar(600) DEFAULT '',
 	image_url varchar (256),

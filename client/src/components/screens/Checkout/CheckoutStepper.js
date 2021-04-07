@@ -14,6 +14,7 @@ import PickupMethodForm from './PickupMethodForm';
 import guy from "../../../assets/Checkout_imgs/OrderReview.jpg";
 import {  Image } from "grommet";
 import Grid from '@material-ui/core/Grid';
+import { createMuiTheme, ThemeProvider} from '@material-ui/core/styles';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -22,9 +23,9 @@ const useStyles = makeStyles((theme) => ({
         
     },
     button: {
-        // background: '#FE646F',
         marginTop: theme.spacing(1),
         marginRight: theme.spacing(1),
+
     },
     actionsContainer: {
         marginBottom: theme.spacing(2),
@@ -84,8 +85,27 @@ export default function VerticalLinearStepper() {
         setActiveStep(0);
     };
 
+    const theme = createMuiTheme({
+        palette: {
+            primary: {
+                light: '#fe838b',
+                main: '#FE646F',
+                dark: '#b1464d',
+                contrastText: '#fff',
+            },
+            secondary: {
+                light: '#fe838b',
+                main: '#FE646F',
+                dark: '#b1464d',
+                contrastText: '#000',
+            },
+        },
+    });
+
     return (
         <div className={classes.root}>
+            <ThemeProvider theme={theme}>
+
             <Stepper className={classes.appbar} activeStep={activeStep} orientation="vertical"  >
                 {steps.map((label, index) => (
                     <Step key={label}>
@@ -117,25 +137,45 @@ export default function VerticalLinearStepper() {
             </Stepper>
             {activeStep === steps.length && (
 
-                <Paper square elevation={5} className={classes.resetContainer}>
-                    <Typography variant="h6">
-                        <Box color="#FE646F">
-                            Your order has been placed !
-                        </Box>
-                    </Typography>
-                    <Typography variant="subtitle1">
-                        <Box fontWeight="fontWeightBold">
-                            Confirmation Number: 5896 2233 1367 1989    
-                        </Box>
-                    </Typography>
 
-                    <Typography variant="body2">Confirmation Text :)</Typography>
+                    <Paper square elevation={5} className={classes.resetContainer}>
+                    <Grid style={{ padding: 20 }} container justify="center" spacing={3}>
+                        <Grid style={{ padding: 20 }} item >
 
-                    <Button onClick={handleReset} className={classes.button}>
-                        Reset
-                    </Button>
-                </Paper>
+                                <Grid justify="center" style={{ padding: 10 }}item xs={12}>
+
+                                    <Typography variant="h6">
+                                        <Box color="#FE646F">
+                                            Your order has been placed !
+                                        </Box>
+                                    </Typography>
+                                </Grid>
+
+                                <Grid justify="center" style={{ padding: 10 }}item xs={12}>
+
+                                    <Typography variant="subtitle1">
+                                        <Box fontWeight="fontWeightBold">
+                                            Confirmation Number: 5896 2233 1367 1989    
+                                        </Box>
+                                    </Typography>
+
+                                </Grid>
+
+                                <Grid justify="center" style={{ padding: 10 }} item  xs={12}>
+
+                                    <Typography variant="body2">Confirmation Text :)</Typography>
+                                </Grid>
+                                {/* 
+                                <Button onClick={handleReset} className={classes.button}>
+                                    Reset
+                                </Button> */}
+                        </Grid>
+                    </Grid>
+
+                    </Paper>
+
             )}
+            </ThemeProvider>
         </div>
     );
 }

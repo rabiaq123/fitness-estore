@@ -24,35 +24,19 @@ const status = {
 }
 
 /** 
- *  Retrieves 10 records (Paginated) from products table 
+ *  Retrieves all records from products table 
  * ----------------------
- *  @returns records -> list of 10 paginated product rows
+ *  @returns records -> list of all the products
  */
 router.get('/getProducts', (req, res) => {
-    const page = parseInt(req.query.page);
-    const limit = 10;
-
-    // Setting indexes for pagination
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    let previous, next;
-    if (startIndex > 0) {
-        previous = page - 1;
-    };
 
     (async function () {
         try {
             let result = await DBRunner(queryStringBuilder('SELECT', 'PRODUCTS', [], []), []);
             let rows = result.rows;
-            if (endIndex < rows.length) {
-                next = page + 1;
-            }
             res.status(status.success).send({
                 message: "successfully retrieved " + rows.length + " product(s)",
-                records: rows.slice(startIndex, endIndex),
-                pageCount: Math.ceil(rows.length / limit),
-                next: next,
-                previous: previous
+                records: rows,
             });
         } catch (error) {
             res.status(status.error).send(error.message);
@@ -136,10 +120,6 @@ router.post('/updateData', (req, res) => {
                 let colValues = Object.values(record);
                 identifiers[colNames.shift()] = colValues.shift();
 
-                //console.log(record);
-                /* console.log(identifiers);
-                console.log(colNames);
-                console.log(colValues); */
                 const returnData = await DBRunner(queryStringBuilder('UPDATE', JSONObject.tableName, colNames, identifiers), colValues);
                 count += returnData.rowCount;
                 // console.log(returnData);
@@ -161,7 +141,6 @@ router.post('/updateData', (req, res) => {
  */
 router.post('/deleteData', (req, res) => {
     let JSONObject = req.body.data;
-    // console.log(JSONObject);
 
     (async function () {
         try {
@@ -241,7 +220,7 @@ function setCommand(operation, tableName, identifiers) {
         commandSectionString.push('* FROM ' + tableName);
         //Completes string if its getting all products
         if (tableName == 'PRODUCTS' && identifiers.length == 0) {
-            commandSectionString.push('ORDER BY product_id');
+            commandSectionString.push('ORDER BY id');
         } else {
             commandSectionString.push('WHERE');
         }
@@ -292,7 +271,7 @@ function setValues(operation, parameters, identifiers) {
         //Adding a returning statement to get the ID(and other data) of the inserted row
         valueSectionString.push('RETURNING *');
     }
-    //Setting identifiers (e.g WHERE product_id = 1)
+    //Setting identifiers (e.g WHERE id = 1)
     let set = [];
     Object.keys(identifiers).forEach(key => {
         set.push(key + ' = ' + identifiers[key]);

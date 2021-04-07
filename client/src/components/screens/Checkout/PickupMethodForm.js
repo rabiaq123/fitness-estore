@@ -43,42 +43,45 @@ export default function PickupMethodForm() {
                     required
                     name="address"
                     label="Address"
+                    defaultValue="50 Stone Road E." 
+                    variant="outlined"
+                    size="small"
+                    ref={register({ required: true })}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField fullWidth
+                    required
+                    name="postalCode"
+                    label="Postal Code"
+                    defaultValue="N1G 2W1" 
+                    size="small"
+                    variant="outlined"
+                    ref={register({ required: true })}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField fullWidth
+                    required
+                    name="city"
+                    label="City"
+                    defaultValue="Guelph"
                     size="small"
                     variant="outlined"
                     ref={register({ required: true, maxLength: 20 })}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField fullWidth
+                      required 
+                      name="province"
+                      label="Province" 
+                      defaultValue="ON" 
+                      size="small"
+                      variant="outlined"
+                      ref={register({ required: true, maxLength: 20 })}
                     />
                 </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      name="postalCode"
-                      label="Postal Code"
-                      size="small"
-                      variant="outlined"
-                      ref={register({ required: true })}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField fullWidth
-                      required
-                      name="city"
-                      label="City"
-                      size="small"
-                      variant="outlined"
-                      ref={register({ required: true, maxLength: 20 })}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField fullWidth
-                      required
-                      name="province"
-                      label="Province"
-                      size="small"
-                      variant="outlined"
-                      ref={register({ required: true, maxLength: 20 })}
-                    />
-                  </Grid>
               </Grid>
             </Grid>
 

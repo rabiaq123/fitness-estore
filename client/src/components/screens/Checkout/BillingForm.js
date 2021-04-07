@@ -44,6 +44,7 @@ export default function BillingForm() {
                     name="creditCardNo"
                     size="small"
                     variant="outlined"
+                    defaultValue="1264 5522 5632 3627"
                     ref={register({ required: true, maxLength: 20 })}
                   />
                 </Grid>
@@ -55,9 +56,10 @@ export default function BillingForm() {
                     fullWidth
                     required
                     label="MM"
-                    name="espMonth"
+                    name="expMonth"
                     size="small"
                     variant="outlined"
+                    defaultValue="12"
                     ref={register({ required: true })}
                   />
                 </Grid>
@@ -66,9 +68,10 @@ export default function BillingForm() {
                     fullWidth
                     required
                     label="YYYY"
-                    name="espYear"
+                    name="expYear"
                     size="small"
                     variant="outlined"
+                    defaultValue="2022"
                     ref={register({ required: true })}
                   />
                 </Grid>

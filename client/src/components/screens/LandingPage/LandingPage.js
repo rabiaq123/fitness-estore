@@ -12,7 +12,7 @@ export default function LandingPage() {
         width={{
           max: "1200px",
         }}
-        style={{ margin: "auto", marginTop: 50 }}
+        style={{ margin: "auto"}}
       >
         <Carousel />
       </Box>

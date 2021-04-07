@@ -157,7 +157,7 @@ const ProductOptionsMenu = ({
     <>
       <Accordion style={styles} elevation={0}>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>Categories</Typography>
+          <Typography><b>Categories</b></Typography>
         </AccordionSummary>
         <AccordionDetails>
           <CategoryOptions category={category} setCategory={setCategory} />
@@ -165,7 +165,7 @@ const ProductOptionsMenu = ({
       </Accordion>
       <Accordion style={styles} elevation={0}>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>Filter by Price</Typography>
+          <Typography><b>Filter by Price</b></Typography>
         </AccordionSummary>
         <AccordionDetails>
           <FilterOptions
@@ -176,7 +176,7 @@ const ProductOptionsMenu = ({
       </Accordion>
       <Accordion style={styles} elevation={0}>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>Sort by Price</Typography>
+          <Typography><b>Sort by Price</b></Typography>
         </AccordionSummary>
         <AccordionDetails>
           <SortOptions sortBy={sortBy} setSortBy={setSortBy} />

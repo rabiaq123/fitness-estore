@@ -34,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 50,
     minHeight: "100%",
     padding: 50,
-    justifyContent: "space-evenly",
+    gap: 20,
+    justifyContent: "center",
   },
   productCard: {
     backgroundColor: "grey",
@@ -188,7 +189,7 @@ const ProductCard = ({ productItem }) => {
       style={{
         borderRadius: 25,
         maxWidth: 300,
-        // maxHeight: 260,
+        height: "fit-content",
         marginTop: 10,
         marginBottom: 10,
         cursor: "pointer",
@@ -229,10 +230,11 @@ export default function Products() {
   const [sortBy, setSortBy] = useState(0);
   const [products, setProducts] = useState(null);
   const [filterPrice, setFilterPrice] = useState([0, 2000]);
-  const [category, setCategory] = useState(null); // null = all products
+  const [category, setCategory] = useState(
+    state?.category ? state.category : null
+  ); // null = all products
 
   useEffect(() => {
-    console.log(state);
     // Call DB here for products
     axios
       .get("https://fitnova-server.herokuapp.com/API/getProducts?page=1")
@@ -240,6 +242,8 @@ export default function Products() {
         console.log(resp);
         setProducts(resp.data.records);
       });
+
+    document.title = "Products Page";
     // Filter by
     // return () => {};
   }, [sortBy, filterPrice, category]);
@@ -311,9 +315,8 @@ export default function Products() {
                 let priceOne = firstEl.props.productItem.price;
                 let priceTwo = secondEl.props.productItem.price;
 
-                if (sortBy == 0) {
+                if (sortBy === 0) {
                   // Lowest to highest
-                  console.log(firstEl, secondEl);
                   return priceOne - priceTwo;
                 } else {
                   // Highest to lowest

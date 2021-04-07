@@ -111,7 +111,7 @@ export default function ProductDetails() {
                       backgroundColor: "#FE646F",
                     }}
                     onClick={() => {
-                      history.push("/Checkout");
+                      history.push("/checkout");
                     }}
                   >
                     Purchase

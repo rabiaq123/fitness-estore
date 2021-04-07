@@ -52,7 +52,7 @@ export default function BillingForm() {
                   <TextField
                     fullWidth
                     required
-                    label="Expiry Month"
+                    label="Expiry Month (MM)"
                     name="espMonth"
                     size="small"
                     variant="outlined"
@@ -63,7 +63,7 @@ export default function BillingForm() {
                   <TextField
                     fullWidth
                     required
-                    label="Expiry Year"
+                    label="Expiry Year (YYYY)"
                     name="espYear"
                     size="small"
                     variant="outlined"

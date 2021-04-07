@@ -35,59 +35,58 @@ export default function PickupMethodForm() {
         <form onSubmit={handleSubmit(onSubmit)}>
 
           <Grid container spacing={3}>
-
-              <Grid item xs={6}>
-                <Grid container spacing={2}>
-
+            
+            <Grid item xs={6}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField fullWidth
+                    required
+                    name="address"
+                    label="Address"
+                    size="small"
+                    variant="outlined"
+                    ref={register({ required: true, maxLength: 20 })}
+                    />
+                </Grid>
                   <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      name="postalCode"
+                      label="Postal Code"
+                      size="small"
+                      variant="outlined"
+                      ref={register({ required: true })}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
                     <TextField fullWidth
                       required
-                      name="address"
-                      label="Address"
+                      name="city"
+                      label="City"
                       size="small"
                       variant="outlined"
                       ref={register({ required: true, maxLength: 20 })}
-                      />
+                    />
                   </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        required
-                        fullWidth
-                        name="postalCode"
-                        label="Postal Code"
-                        size="small"
-                        variant="outlined"
-                        ref={register({ required: true })}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField fullWidth
-                        required
-                        name="city"
-                        label="City"
-                        size="small"
-                        variant="outlined"
-                        ref={register({ required: true, maxLength: 20 })}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField fullWidth
-                        required
-                        name="province"
-                        label="Province"
-                        size="small"
-                        variant="outlined"
-                        ref={register({ required: true, maxLength: 20 })}
-                      />
-                    </Grid>
-                </Grid>
+                  <Grid item xs={6}>
+                    <TextField fullWidth
+                      required
+                      name="province"
+                      label="Province"
+                      size="small"
+                      variant="outlined"
+                      ref={register({ required: true, maxLength: 20 })}
+                    />
+                  </Grid>
               </Grid>
-
-              <Grid item xs={6}>
-                <ExpressCard/>
-              </Grid>
-
             </Grid>
+
+            <Grid item xs={6}>
+              <ExpressCard/>
+            </Grid>
+
+          </Grid>
         </form>
       );
     } else {

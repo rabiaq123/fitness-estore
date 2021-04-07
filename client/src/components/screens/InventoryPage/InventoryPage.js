@@ -35,8 +35,7 @@ import { GridOverlay, DataGrid, useGridSlotComponentProps } from '@material-ui/d
 import Pagination from '@material-ui/lab/Pagination';
 import MuiAlert from '@material-ui/lab/Alert';
 import './InventoryPage.css';
-import testImg from "../../../assets/product_imgs/bowflex-selecttech-552-dumbbell-set.png";
-
+import Test from "../../../assets/product_imgs/no-image.png";
 // Styling used in this page
 const useStyles = makeStyles((theme) => ({
   gridOverlayRoot: {
@@ -373,7 +372,8 @@ export default function InventoryTable() {
   const [rows, loadRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchFilter, setFilter] = useState("");
-  const baseURL = "https://fitnova-server.herokuapp.com/API"
+  const baseURL = "https://fitnova-server.herokuapp.com/API";
+  // const imgSrc = "../../../assets/product_imgs/";
 
   // Updates rows in datagrid when something is updated
   useEffect(() => {
@@ -438,7 +438,7 @@ export default function InventoryTable() {
   // Updates or adds product to backend server
   const updateProduct = () => {
     // Update product since id exists
-    if (selectedRow.id != 0) {
+    if (selectedRow.id !== 0) {
       let JSONObject = {
         tableName: 'PRODUCTS',
         data: [selectedRow]
@@ -549,7 +549,18 @@ export default function InventoryTable() {
     }
     getRow(newProduct);
     setOpen(true);
-  }
+  };
+
+  const saveImgUrl = ({target}) => {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(target.files[0]);
+    selectedRow.image_url = target.files[0].name
+    // fileReader.onload = (e) => {
+    //     this.setState((prevState) => ({
+    //         [name]: [...prevState[name], e.target.result]
+    //     }));
+    // };
+  };
 
   // Sets the columns (and their data) of the table 
   const columns = [
@@ -578,7 +589,12 @@ export default function InventoryTable() {
 
           // Set the selected row data
           getRow(Object.assign({}, rows.find(row => row.id === thisRow['id'])));
-          console.log(selectedRow)
+          // selectedRow.image_url = null
+          if(selectedRow.image_url === null) {
+            selectedRow.image_url = 'no-image.png';
+            console.log(selectedRow.image_url);
+          }
+          console.log(selectedRow);
           // Open modal
           setOpen(true);
           return;
@@ -599,14 +615,17 @@ export default function InventoryTable() {
 
           // Set the selected row data
           getRow(Object.assign({}, rows.find(row => row.id === thisRow['id'])));
-          console.log(selectedRow)
-
+          if(selectedRow.image_url === null) {
+            selectedRow.image_url = 'no-image.png';
+            console.log(selectedRow.image_url);
+          }
+          console.log(selectedRow);
           setOpenDelete(true);
           return;
         };
 
-        return <div align='center'>
-          <IconButton color="default" onClick={openModal}>
+        return <div align='center' justify="center">
+          <IconButton color="default" align="center" onClick={openModal}>
             <EditIcon />
           </IconButton>
           <IconButton color="default" onClick={openDeleteModal}>
@@ -858,13 +877,27 @@ export default function InventoryTable() {
                   <Card classes={{ root: classes.modalImg }} variant="outlined">
                     <CardMedia
                       component="img"
-                      image={testImg}
+                      // style={{ height: "250px", paddingTop: "2%" }}
+                      image={Test}
                       title={selectedRow.product_name}
                     ></CardMedia>
                   </Card>
-                  <IconButton onClick={handleClose} className={classes.editButtonModal}>
-                    <EditIcon className={classes.editIconModal} />
-                  </IconButton>
+                  <input
+                    accept="image/*"
+                    // className={classes.input}
+                    style={{ display: 'none' }}
+                    id="raised-button-file"
+                    multiple
+                    type="file"
+                    // hidden
+                    onChange={saveImgUrl}
+                  />
+                  <label htmlFor="raised-button-file">
+                    <IconButton component="span" className={classes.editButtonModal}>
+                      <EditIcon className={classes.editIconModal} />
+                    </IconButton>
+                  </label>
+
                 </div>
               </Box>
             </Grid>
@@ -897,7 +930,7 @@ export default function InventoryTable() {
           </IconButton>
         </DialogActions>
       </Dialog>
-      
+
       {/* Status update toast notifications */}
       <Snackbar open={openSuccessDelete} autoHideDuration={5000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">

@@ -112,7 +112,7 @@ export default function VerticalLinearStepper() {
                 ))}
             </Stepper>
             {activeStep === steps.length && (
-
+              <div>
                 <Paper square elevation={5} className={classes.resetContainer}>
                     <Typography variant="h6">
                         <Box color="#FE646F">
@@ -131,6 +131,8 @@ export default function VerticalLinearStepper() {
                         Reset
                     </Button>
                 </Paper>
+                <br/>
+              </div>
             )}
         </div>
     );

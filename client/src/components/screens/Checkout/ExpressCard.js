@@ -22,6 +22,7 @@ const useStyles = makeStyles({
   },
 });
 
+
 export default function OutlinedCard() {
   const classes = useStyles();
 
@@ -30,8 +31,7 @@ export default function OutlinedCard() {
   });
 
   const handleChange = (event) => {
-    setState({state, [event.target.name]: event.target.checked });
-    //console.log("EXPRESS SELECTED =", event.target.checked);
+    setState({state, [event.target.name]: event.target.checked }); //boolean value
   };
 
   const renderExpressCard = (option) => {
@@ -60,7 +60,7 @@ export default function OutlinedCard() {
           <FormControlLabel
             control={
               <Checkbox
-              checked={state.ExpressDelivery}
+                checked={state.ExpressDelivery}
                 onChange={handleChange}
                 name="ExpressDelivery"
               />

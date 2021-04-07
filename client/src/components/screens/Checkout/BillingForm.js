@@ -33,7 +33,6 @@ export default function BillingForm() {
     <Container className={classes.container} maxWidth="sm">
       <Grid container spacing={3}>
         <form onSubmit={handleSubmit(onSubmit)}>
-
           <Grid container spacing={3}>
 
             <Grid item xs={12}>
@@ -48,28 +47,36 @@ export default function BillingForm() {
                     ref={register({ required: true, maxLength: 20 })}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
+                  Expiration Date:
+                </Grid>
+                <Grid item xs={3}>
                   <TextField
                     fullWidth
                     required
-                    label="Expiry Month (MM)"
+                    label="MM"
                     name="espMonth"
                     size="small"
                     variant="outlined"
                     ref={register({ required: true })}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={3}>
                   <TextField
                     fullWidth
                     required
-                    label="Expiry Year (YYYY)"
+                    label="YYYY"
                     name="espYear"
                     size="small"
                     variant="outlined"
                     ref={register({ required: true })}
                   />
                 </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -84,6 +91,7 @@ export default function BillingForm() {
                 </Grid>
               </Grid>
             </Grid>
+
           </Grid>
         </form>
       </Grid>

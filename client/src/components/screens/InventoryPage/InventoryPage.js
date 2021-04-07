@@ -13,7 +13,8 @@ import {
   MenuItem,
   TextField,
   Card,
-  Snackbar
+  Snackbar,
+  Button
 } from "@material-ui/core";
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -102,6 +103,15 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("md")]: {
       width: "100%",
     },
+  },
+  addButton: {
+    borderRadius: "20px",
+    backgroundColor: "#FE646F",
+    marginTop: 10,
+    "&:hover": {
+      backgroundColor: fade('#FE646F', 0.80),
+    },
+    padding: 10,
   },
 
   // Modal Components
@@ -346,6 +356,8 @@ export default function InventoryTable() {
   const [openErrorDelete, setOpenErrorDelete] = React.useState(false);
   const [openSuccessUpdate, setOpenSuccessUpdate] = React.useState(false);
   const [openErrorUpdate, setOpenErrorUpdate] = React.useState(false);
+  const [openErrorAdd, setOpenErrorAdd] = React.useState(false);
+  const [openSuccessAdd, setOpenSuccessAdd] = React.useState(false);
   const [selectedRow, getRow] = React.useState({});
   const [rows, loadRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -401,6 +413,8 @@ export default function InventoryTable() {
     setOpenErrorUpdate(false);
     setOpenSuccessDelete(false);
     setOpenSuccessUpdate(false);
+    setOpenErrorAdd(false);
+    setOpenSuccessAdd(false);
   };
 
   const updateSelected = (prop) => (event) => {
@@ -408,25 +422,48 @@ export default function InventoryTable() {
   }
 
   const updateProduct = () => {
-    let JSONObject = {
-      tableName: 'PRODUCTS',
-      data: [selectedRow]
-    }
-    console.log(JSONObject);
-    axios({
-      method: "post",
-      url: baseURL + '/updateData',
-      data: {
-        data: JSONObject
+    if (selectedRow.id != 0) {
+      let JSONObject = {
+        tableName: 'PRODUCTS',
+        data: [selectedRow]
       }
-    }).then(response => {
-      setOpenSuccessUpdate(true);
-      console.log(response.data);
-      return response.data;
-    }).catch(error => {
-      console.log(error.message);
-    });
-
+      console.log(JSONObject);
+      axios({
+        method: "post",
+        url: baseURL + '/updateData',
+        data: {
+          data: JSONObject
+        }
+      }).then(response => {
+        setOpenSuccessUpdate(true);
+        console.log(response.data);
+        return response.data;
+      }).catch(error => {
+        setOpenErrorUpdate(true);
+        console.log(error.message);
+      });
+    } else {
+      delete selectedRow.id;
+      let JSONObject = {
+        tableName: 'PRODUCTS',
+        data: [selectedRow]
+      }
+      console.log(JSONObject);
+      axios({
+        method: "post",
+        url: baseURL + '/addData',
+        data: {
+          data: JSONObject
+        }
+      }).then(response => {
+        console.log(response.data);
+        setOpenSuccessAdd(true);
+        return response.data;
+      }).catch(error => {
+        setOpenErrorAdd(true);
+        console.log(error.message);
+      });
+    }
     setIsLoading(true);
     axios({
       method: "get",
@@ -461,6 +498,7 @@ export default function InventoryTable() {
       setOpenSuccessDelete(true);
       return response.data;
     }).catch(error => {
+      setOpenErrorDelete(true);
       console.log(error.message);
     });
 
@@ -478,6 +516,19 @@ export default function InventoryTable() {
     });
     handleClose();
   }
+
+  const addProduct = () => {
+    let newProduct = {
+      id: 0,
+      product_name: "",
+      category: "",
+      price: 0,
+      quantity: 0
+    }
+    getRow(newProduct);
+    setOpen(true);
+  }
+
   // Sets the columns (and their data) of the table 
   const columns = [
     { field: 'id', headerName: 'Product ID', flex: 0.5, disableClickEventBubbling: true, align: 'center' },
@@ -551,12 +602,12 @@ export default function InventoryTable() {
         justifyContent="center"
         rows={["xxsmall", "630px"]}
         columns={["0.25fr", ".75fr"]}
-        gap="large"
+        gap="medium"
         areas={[
           { name: "search-bar", start: [0, 0], end: [1, 0] },
           { name: "inventory-table", start: [0, 1], end: [1, 1] },
         ]}
-        style={{ margin: 50, marginLeft: 50, marginRight: 50 }}
+        style={{ margin: 50, marginLeft: 50, marginRight: 50, marginTop: 20, marginBottom: 20 }}
       >
         <Box
           gridArea="search-bar"
@@ -590,14 +641,23 @@ export default function InventoryTable() {
                   LoadingOverlay: CustomLoadingOverlay,
                   Pagination: CustomPagination
                 }}
-                // autoPageSize 
-                // pagination
                 pageSize={10}
                 loading={isLoading}
                 rows={rows}
                 columns={columns}
                 disableColumnMenu />
             </div>
+          </div>
+          <div>
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.addButton}
+              onClick={addProduct}
+            // startIcon={<DeleteIcon />}
+            >
+              Add Product
+            </Button>
           </div>
         </Box>
       </Grid>
@@ -834,6 +894,16 @@ export default function InventoryTable() {
       <Snackbar open={openErrorUpdate} autoHideDuration={5000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
           An error occurred when updating. Couldn't update product.
+        </Alert>
+      </Snackbar>
+      <Snackbar open={openSuccessAdd} autoHideDuration={5000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          New Product Successfully Added!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={openErrorAdd} autoHideDuration={5000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error">
+          An error occurred when adding the new product. Couldn't add product.
         </Alert>
       </Snackbar>
     </div>

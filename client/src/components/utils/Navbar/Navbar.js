@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
   },
   shoppingCartIcon: {
     color: "white",
-    size: 'small'
+    size: "small",
   },
 }));
 
@@ -134,7 +134,7 @@ export default function Navbar() {
       </MenuItem>
       <MenuItem className={classes.navMenuItems} onClick={handleClose}>
         <Link
-          to={{ pathname: "/products", state: { category: "fitness-gear" } }}
+          to={{ pathname: "/products", state: { category: "fitness gear" } }}
           className="menu_links"
         >
           Fitness Gear
@@ -151,7 +151,14 @@ export default function Navbar() {
   return (
     <div className={classes.grow}>
       <AppBar position="static">
-        <Toolbar style={{ backgroundColor: "#FE646F", paddingLeft: 20, paddingTop: 10, paddingBottom: 10,}}>
+        <Toolbar
+          style={{
+            backgroundColor: "#FE646F",
+            paddingLeft: 20,
+            paddingTop: 10,
+            paddingBottom: 10,
+          }}
+        >
           <Link to="/">
             <img height="50px" width="auto" src={fitnova} alt="Fitnova logo" />
           </Link>

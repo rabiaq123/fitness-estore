@@ -144,11 +144,12 @@ const ProductOptionsMenu = ({
     marginTop: 10,
     marginBottom: 10,
     maxWidth: 220,
+    backgroundColor: "#EFF0F6",
   };
 
   return (
     <>
-      <Accordion style={styles}>
+      <Accordion style={styles} elevation={0}>
         <AccordionSummary expandIcon={<ExpandMore />}>
           <Typography>Categories</Typography>
         </AccordionSummary>
@@ -156,7 +157,7 @@ const ProductOptionsMenu = ({
           <CategoryOptions category={category} setCategory={setCategory} />
         </AccordionDetails>
       </Accordion>
-      <Accordion style={styles}>
+      <Accordion style={styles} elevation={0}>
         <AccordionSummary expandIcon={<ExpandMore />}>
           <Typography>Filter by Price</Typography>
         </AccordionSummary>
@@ -167,7 +168,7 @@ const ProductOptionsMenu = ({
           />
         </AccordionDetails>
       </Accordion>
-      <Accordion style={styles}>
+      <Accordion style={styles} elevation={0}>
         <AccordionSummary expandIcon={<ExpandMore />}>
           <Typography>Sort by Price</Typography>
         </AccordionSummary>

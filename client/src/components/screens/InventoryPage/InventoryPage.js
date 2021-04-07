@@ -453,6 +453,20 @@ export default function InventoryTable() {
       }).then(response => {
         setOpenSuccessUpdate(true);
         console.log(response.data);
+        // Updating datagrid rows with updated data
+        setIsLoading(true);
+        axios({
+          method: "get",
+          url: baseURL + '/getProducts',
+        }).then(response => {
+          console.log(response.data.message);
+          loadRows(response.data.records);
+          console.log(rows);
+          setIsLoading(false);
+        }).catch(error => {
+          console.log(error.message);
+        });
+        handleClose();
         return response.data;
       }).catch(error => {
         setOpenErrorUpdate(true);
@@ -475,27 +489,26 @@ export default function InventoryTable() {
       }).then(response => {
         console.log(response.data);
         setOpenSuccessAdd(true);
+        // Updating datagrid rows with updated data
+        setIsLoading(true);
+        axios({
+          method: "get",
+          url: baseURL + '/getProducts',
+        }).then(response => {
+          console.log(response.data.message);
+          loadRows(response.data.records);
+          console.log(rows);
+          setIsLoading(false);
+        }).catch(error => {
+          console.log(error.message);
+        });
+        handleClose();
         return response.data;
       }).catch(error => {
         setOpenErrorAdd(true);
         console.log(error.message);
       });
     }
-
-    // Updating datagrid rows with updated data
-    setIsLoading(true);
-    axios({
-      method: "get",
-      url: baseURL + '/getProducts',
-    }).then(response => {
-      console.log(response.data.message);
-      loadRows(response.data.records);
-      console.log(rows);
-      setIsLoading(false);
-    }).catch(error => {
-      console.log(error.message);
-    });
-    handleClose();
   }
 
   // Delete a product
@@ -545,16 +558,18 @@ export default function InventoryTable() {
       product_name: "",
       category: "",
       price: 0,
-      quantity: 0
+      quantity: 0,
+      notes: ""
     }
     getRow(newProduct);
     setOpen(true);
   };
 
-  const saveImgUrl = ({target}) => {
+  const saveImgUrl = ({ target }) => {
     const fileReader = new FileReader();
     fileReader.readAsDataURL(target.files[0]);
     selectedRow.image_url = target.files[0].name
+    getRow(selectedRow);
     // fileReader.onload = (e) => {
     //     this.setState((prevState) => ({
     //         [name]: [...prevState[name], e.target.result]
@@ -590,7 +605,7 @@ export default function InventoryTable() {
           // Set the selected row data
           getRow(Object.assign({}, rows.find(row => row.id === thisRow['id'])));
           // selectedRow.image_url = null
-          if(selectedRow.image_url === null) {
+          if (selectedRow.image_url === null) {
             selectedRow.image_url = 'no-image.png';
             console.log(selectedRow.image_url);
           }
@@ -615,7 +630,7 @@ export default function InventoryTable() {
 
           // Set the selected row data
           getRow(Object.assign({}, rows.find(row => row.id === thisRow['id'])));
-          if(selectedRow.image_url === null) {
+          if (selectedRow.image_url === null) {
             selectedRow.image_url = 'no-image.png';
             console.log(selectedRow.image_url);
           }

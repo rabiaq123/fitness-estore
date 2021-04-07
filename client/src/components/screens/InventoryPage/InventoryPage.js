@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+// Core Components
 import {
   LinearProgress,
   IconButton,
@@ -22,6 +23,8 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import { fade, makeStyles, withStyles } from "@material-ui/core/styles";
 import { Grid, Box } from "grommet";
+
+// Icons
 import SearchIcon from "@material-ui/icons/Search";
 import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
@@ -104,6 +107,8 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
   },
+
+
   addButton: {
     borderRadius: "20px",
     backgroundColor: "#FE646F",
@@ -114,7 +119,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
   },
 
-  // Modal Components
+  // Edit Modal Components
   modal: {
     minWidth: 500,
     minHeight: 600,
@@ -163,6 +168,8 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     size: 'small'
   },
+
+  // Delete Dialog
   deleteModalTitle: {
     margin: 0,
     // borderRadius: 15,
@@ -196,6 +203,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// Other Styles used
 const styles = (theme) => ({
   rootModal: {
     margin: 0,
@@ -283,6 +291,7 @@ function CustomPagination() {
   );
 }
 
+// Shows a loading animation when loading data
 function CustomLoadingOverlay() {
   return (
     <GridOverlay>
@@ -350,6 +359,7 @@ const category = [
 
 export default function InventoryTable() {
   const classes = useStyles();
+
   const [open, setOpen] = React.useState(false);
   const [openDelete, setOpenDelete] = React.useState(false);
   const [openSuccessDelete, setOpenSuccessDelete] = React.useState(false);
@@ -358,18 +368,21 @@ export default function InventoryTable() {
   const [openErrorUpdate, setOpenErrorUpdate] = React.useState(false);
   const [openErrorAdd, setOpenErrorAdd] = React.useState(false);
   const [openSuccessAdd, setOpenSuccessAdd] = React.useState(false);
+
   const [selectedRow, getRow] = React.useState({});
   const [rows, loadRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchFilter, setFilter] = useState("");
   const baseURL = "https://fitnova-server.herokuapp.com/API"
 
+  // Updates rows in datagrid when something is updated
   useEffect(() => {
     axios
       .get("https://fitnova-server.herokuapp.com/API/getProducts")
       .then((resp) => {
         // console.log(resp.data.message);
         let data = resp.data.records;
+        // Apply filter if there is one
         if (searchFilter != null && data.length > 0) {
           // console.log("here" + searchFilter)
           data = data.filter(row => row.product_name.toLowerCase().includes(searchFilter.toLowerCase()));
@@ -377,7 +390,6 @@ export default function InventoryTable() {
         }
         // console.log(data)
         loadRows(data);
-        // console.log(rows);
       })
       .catch((err) => {
         console.log(err);
@@ -385,6 +397,7 @@ export default function InventoryTable() {
   }, [searchFilter, rows])
 
 
+  // Saves the search string
   let handleSearch = (event) => {
     if (event.key !== "Enter") return;
     setIsLoading(true);
@@ -405,7 +418,7 @@ export default function InventoryTable() {
     cellClassName: 'font-tabular-nums',
   };
 
-  // Closes the edit modal
+  // Closes the modals
   const handleClose = () => {
     setOpen(false);
     setOpenDelete(false);
@@ -417,11 +430,14 @@ export default function InventoryTable() {
     setOpenSuccessAdd(false);
   };
 
+  // Updates the selected row data with the new values in inputs 
   const updateSelected = (prop) => (event) => {
     getRow({ ...selectedRow, [prop]: event.target.value });
   }
 
+  // Updates or adds product to backend server
   const updateProduct = () => {
+    // Update product since id exists
     if (selectedRow.id != 0) {
       let JSONObject = {
         tableName: 'PRODUCTS',
@@ -443,6 +459,7 @@ export default function InventoryTable() {
         console.log(error.message);
       });
     } else {
+      // Add a new product
       delete selectedRow.id;
       let JSONObject = {
         tableName: 'PRODUCTS',
@@ -464,6 +481,8 @@ export default function InventoryTable() {
         console.log(error.message);
       });
     }
+
+    // Updating datagrid rows with updated data
     setIsLoading(true);
     axios({
       method: "get",
@@ -479,6 +498,7 @@ export default function InventoryTable() {
     handleClose();
   }
 
+  // Delete a product
   const deleteProduct = () => {
     let JSONObject = {
       tableName: 'PRODUCTS',
@@ -502,6 +522,7 @@ export default function InventoryTable() {
       console.log(error.message);
     });
 
+    // Updating datagrid rows
     setIsLoading(true);
     axios({
       method: "get",
@@ -517,6 +538,7 @@ export default function InventoryTable() {
     handleClose();
   }
 
+  // Open edit modal with a dummy row data (id = 0 indicates a new product)
   const addProduct = () => {
     let newProduct = {
       id: 0,
@@ -654,7 +676,6 @@ export default function InventoryTable() {
               color="secondary"
               className={classes.addButton}
               onClick={addProduct}
-            // startIcon={<DeleteIcon />}
             >
               Add Product
             </Button>
@@ -662,6 +683,7 @@ export default function InventoryTable() {
         </Box>
       </Grid>
 
+      {/* Edit Modal Dialog */}
       <Dialog
         fullWidth={true}
         maxWidth='md'
@@ -732,7 +754,6 @@ export default function InventoryTable() {
                       root: classes.modalInputs,
                     },
                   }}
-                  // className={classes.modalInputs}
                   onChange={updateSelected('category')}
                   variant="outlined"
                 >
@@ -838,7 +859,6 @@ export default function InventoryTable() {
                     <CardMedia
                       component="img"
                       image={testImg}
-                      // className={classes.modalImg}
                       title={selectedRow.product_name}
                     ></CardMedia>
                   </Card>
@@ -857,6 +877,7 @@ export default function InventoryTable() {
         </DialogActions>
       </Dialog>
 
+      {/* Delete Modal Dialog */}
       <Dialog
         open={openDelete}
         onClose={handleClose}
@@ -876,6 +897,8 @@ export default function InventoryTable() {
           </IconButton>
         </DialogActions>
       </Dialog>
+      
+      {/* Status update toast notifications */}
       <Snackbar open={openSuccessDelete} autoHideDuration={5000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
           Product Successfully Deleted!

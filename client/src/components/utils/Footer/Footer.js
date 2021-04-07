@@ -3,7 +3,10 @@ import { Anchor, Footer as SiteFooter, Text } from "grommet";
 
 export default function Footer() {
   return (
-    <SiteFooter style={{ padding: 20 }} background="#FE646F">
+    <SiteFooter
+      style={{ padding: 20, position: "fixed", bottom: 0, width: "100vw" }}
+      background="#FE646F"
+    >
       <Text color="white" style={{ fontWeight: "bold" }}>
         Copyright © 2021 Fitnova
       </Text>

@@ -4,7 +4,7 @@ import { Box } from "grommet";
 
 export default function LandingPage() {
   return (
-    <div style={{ height: "calc(83vh + 1px)" }}>
+    <div>
       <Box
         gridArea="main"
         direction="row"

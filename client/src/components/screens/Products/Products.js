@@ -21,7 +21,7 @@ import { Grid, Box } from "grommet";
 import axios from "axios";
 import { useLocation, useHistory } from "react-router-dom";
 import "./Products.css";
-import image from "../../../assets/product_imgs/bowflex-selecttech-552-dumbbell-set.png";
+// import image from "../../../assets/product_imgs/bowflex-selecttech-552-dumbbell-set.png";
 
 const useStyles = makeStyles((theme) => ({
   productContainer: {
@@ -199,8 +199,12 @@ const ProductCard = ({ productItem }) => {
       <CardActionArea>
         <CardMedia
           component="img"
-          image={image}
-          style={{ maxHeight: 140 }}
+          image={
+            productItem.image_url
+              ? `/product_imgs/${productItem.image_url}`
+              : "/no-image.png"
+          }
+          height={140}
           title={productItem.product_name}
         />
         <CardContent>
@@ -237,9 +241,9 @@ export default function Products() {
   useEffect(() => {
     // Call DB here for products
     axios
-      .get("https://fitnova-server.herokuapp.com/API/getProducts?page=1")
+      .get("https://fitnova-server.herokuapp.com/API/getProducts")
       .then((resp) => {
-        console.log(resp);
+        // console.log(resp);
         setProducts(resp.data.records);
       });
 

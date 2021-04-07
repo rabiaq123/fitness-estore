@@ -9,18 +9,11 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormLabel from '@material-ui/core/FormLabel';
 import DateFnsUtils from '@date-io/date-fns';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-
-import {
-    MuiPickersUtilsProvider,
-    KeyboardTimePicker,
-    KeyboardDatePicker,
-} from '@material-ui/pickers'
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +42,7 @@ export default function PickupMethodForm() {
         console.log("event.target.value =", event.target.value);
     };
 
-    const [selectedDate, setSelectedDate] = React.useState(new Date('2021-04-08T21:11:54'));
+    const [selectedDate, setSelectedDate] = React.useState(new Date('2021-04-09T21:11:54'));
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
@@ -183,9 +176,6 @@ export default function PickupMethodForm() {
 
     const { register,
         handleSubmit,
-        errors,
-        setError,
-        clearError,
         formState: { isSubmitting }} = useForm();
 
     const onSubmit = data => {

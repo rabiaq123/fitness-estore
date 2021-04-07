@@ -12,12 +12,12 @@ import AccountDetailsForm from './AccountDetailsForm';
 import PickupMethodForm from './PickupMethodForm';
 import BillingForm from './BillingForm';
 
+
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
     },
     button: {
-        // background: '#FE646F',
         marginTop: theme.spacing(1),
         marginRight: theme.spacing(1),
     },
@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'flex-start',
     }
 }));
+
 
 function getSteps() {
     return ['Account Details', 'Delivery/Pickup Method', 'Billing Information', 'Review Order'];
@@ -59,6 +60,7 @@ function getStepContent(step) {
             return 'Unknown step';
     }
 }
+
 
 export default function VerticalLinearStepper() {
 

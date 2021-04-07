@@ -39,16 +39,15 @@ export default function OutlinedCard() {
       return (
         <div>
           {console.log("Default selected.")}
-          Delivery Date: <b>05/13/2021</b>
+          Delivery Date: <b>04/30/2021</b>
         </div>
       );
     } else {
       return (
         <div>
           {console.log("Express selected.")}
-          Delivery Date: <b>04/20/2021</b>
-          <br/><br/>
-          A <b>$100.00 CAD</b> S/H fee will be applied to your order.
+          Delivery Date: <b>04/15/2021</b>
+          {alert("A $100.00 CAD S/H fee will be applied to your order.")}
         </div>
       );
     }

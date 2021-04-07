@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import Stepper from './CheckoutStepper';
-import Navbar from '../../Navbar';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,7 +22,6 @@ function Checkout(props) {
 
     return (
         <div>
-            <Navbar></Navbar>
             <AppBar position="static" className={classes.appbar}>
                 <Typography variant="h6">
                     Checkout

@@ -5,7 +5,7 @@ import LandingPage from "./components/screens/LandingPage/LandingPage";
 import Products from "./components/screens/Products/Products";
 import ProductDetails from "./components/screens/ProductDetails/ProductDetails";
 import Navbar from "./components/utils/Navbar/Navbar";
-import CheckoutPage from "./components/Checkout/Checkout";
+import CheckoutPage from "./components/screens/Checkout/Checkout";
 
 export default function Router() {
   return (

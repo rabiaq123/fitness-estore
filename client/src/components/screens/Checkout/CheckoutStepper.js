@@ -10,6 +10,11 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import AccountDetailsForm from './AccountDetailsForm';
 import PickupMethodForm from './PickupMethodForm';
+// import OrderReview from '../../../assets/Checkout_imgs/OrderReview';
+import guy from "../../../assets/Checkout_imgs/OrderReview.jpg";
+import {  Image } from "grommet";
+import Grid from '@material-ui/core/Grid';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,7 +58,8 @@ function getStepContent(step) {
             )
         case 3:
             return (
-                <p>HI review thine non existent order</p>
+
+                    <Image fit="contain" style={{ width: '100%', height: '80%' }} src={guy} />
             )
         default:
             return 'Unknown step';

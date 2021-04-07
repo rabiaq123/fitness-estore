@@ -137,6 +137,8 @@ export default function VerticalLinearStepper() {
             </Stepper>
             {activeStep === steps.length && (
 
+                    <Grid style={{ padding: 20 }} item >
+
 
                     <Paper square elevation={5} className={classes.resetContainer}>
                     <Grid style={{ padding: 20 }} container justify="center" spacing={3}>
@@ -173,6 +175,8 @@ export default function VerticalLinearStepper() {
                     </Grid>
 
                     </Paper>
+                    </Grid>
+
 
             )}
             </ThemeProvider>

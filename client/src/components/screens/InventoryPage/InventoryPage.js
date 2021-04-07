@@ -35,7 +35,6 @@ import { GridOverlay, DataGrid, useGridSlotComponentProps } from '@material-ui/d
 import Pagination from '@material-ui/lab/Pagination';
 import MuiAlert from '@material-ui/lab/Alert';
 import './InventoryPage.css';
-import Test from "../../../assets/product_imgs/no-image.png";
 // Styling used in this page
 const useStyles = makeStyles((theme) => ({
   gridOverlayRoot: {
@@ -108,7 +107,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-
   addButton: {
     borderRadius: "20px",
     backgroundColor: "#FE646F",
@@ -146,13 +144,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: fade(theme.palette.text.secondary, 0.05),
   },
   modalImg: {
-    // maxHeight: 200,
-    // height: 200,
-    // maxWidth: 200,
     marginTop: 0,
     marginRight: 0,
     borderRadius: 25,
-    // borderColor: "blue"
   },
   editButtonModal: {
     position: "relative",
@@ -172,7 +166,6 @@ const useStyles = makeStyles((theme) => ({
   // Delete Dialog
   deleteModalTitle: {
     margin: 0,
-    // borderRadius: 15,
     padding: theme.spacing(2),
     backgroundColor: "#FE646F",
     fontWeight: 600
@@ -374,7 +367,6 @@ export default function InventoryTable() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchFilter, setFilter] = useState("");
   const baseURL = "https://fitnova-server.herokuapp.com/API";
-  // const imgSrc = "../../../assets/product_imgs/";
 
   // Updates rows in datagrid when something is updated
   useEffect(() => {
@@ -387,10 +379,10 @@ export default function InventoryTable() {
         if (searchFilter != null && data.length > 0) {
           // console.log("here" + searchFilter)
           data = data.filter(row => row.product_name.toLowerCase().includes(searchFilter.toLowerCase()));
-          setIsLoading(false);
         }
         // console.log(data)
         loadRows(data);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -414,7 +406,6 @@ export default function InventoryTable() {
 
   const price = {
     type: 'number',
-    // width: 130,
     valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
     cellClassName: 'font-tabular-nums',
   };
@@ -452,8 +443,8 @@ export default function InventoryTable() {
           data: JSONObject
         }
       }).then(response => {
-        setOpenSuccessUpdate(true);
         console.log(response.data);
+
         // Updating datagrid rows with updated data
         setIsLoading(true);
         axios({
@@ -468,11 +459,14 @@ export default function InventoryTable() {
           console.log(error.message);
         });
         handleClose();
+        setOpenSuccessUpdate(true);
         return response.data;
       }).catch(error => {
         setOpenErrorUpdate(true);
         console.log(error.message);
       });
+
+
     } else {
       // Add a new product
       delete selectedRow.id;
@@ -489,7 +483,7 @@ export default function InventoryTable() {
         }
       }).then(response => {
         console.log(response.data);
-        setOpenSuccessAdd(true);
+
         // Updating datagrid rows with updated data
         setIsLoading(true);
         axios({
@@ -504,11 +498,13 @@ export default function InventoryTable() {
           console.log(error.message);
         });
         handleClose();
+        setOpenSuccessAdd(true);
         return response.data;
       }).catch(error => {
         setOpenErrorAdd(true);
         console.log(error.message);
       });
+
     }
   }
 
@@ -571,11 +567,6 @@ export default function InventoryTable() {
     fileReader.readAsDataURL(target.files[0]);
     selectedRow.image_url = target.files[0].name
     getRow(selectedRow);
-    // fileReader.onload = (e) => {
-    //     this.setState((prevState) => ({
-    //         [name]: [...prevState[name], e.target.result]
-    //     }));
-    // };
   };
 
   // Sets the columns (and their data) of the table 
@@ -586,7 +577,7 @@ export default function InventoryTable() {
     { field: 'quantity', headerName: 'Quantity', type: 'number', flex: 1, disableClickEventBubbling: true, align: 'center' },
     { field: 'price', headerName: 'Price', ...price, flex: 1, disableClickEventBubbling: true, align: 'center' },
     {
-      field: "actions", flex: 1, align: 'center', headerName: "Actions", disableClickEventBubbling: true,
+      field: "actions", flex: 1, headerName: "Actions", disableClickEventBubbling: true,
       // Creating the 2 button functions that will be in the actions column
       renderCell: (params) => {
         // Function for clicking the edit button for a specific row
@@ -605,12 +596,10 @@ export default function InventoryTable() {
 
           // Set the selected row data
           getRow(Object.assign({}, rows.find(row => row.id === thisRow['id'])));
-          // selectedRow.image_url = null
           if (selectedRow.image_url === null) {
             selectedRow.image_url = 'no-image.png';
-            console.log(selectedRow.image_url);
           }
-          console.log(selectedRow);
+          console.log(selectedRow)
           // Open modal
           setOpen(true);
           return;
@@ -633,14 +622,12 @@ export default function InventoryTable() {
           getRow(Object.assign({}, rows.find(row => row.id === thisRow['id'])));
           if (selectedRow.image_url === null) {
             selectedRow.image_url = 'no-image.png';
-            console.log(selectedRow.image_url);
           }
-          console.log(selectedRow);
           setOpenDelete(true);
           return;
         };
 
-        return <div align='center' justify="center">
+        return <div>
           <IconButton color="default" align="center" onClick={openModal}>
             <EditIcon />
           </IconButton>
@@ -671,7 +658,6 @@ export default function InventoryTable() {
           fontWeight="fontWeightBold"
           style={{
             display: 'flex',
-            // alignItems: 'center',
             flexWrap: 'wrap',
           }}>
 
@@ -893,19 +879,16 @@ export default function InventoryTable() {
                   <Card classes={{ root: classes.modalImg }} variant="outlined">
                     <CardMedia
                       component="img"
-                      // style={{ height: "250px", paddingTop: "2%" }}
-                      image={Test}
+                      image={selectedRow.image_url ? `/product_imgs/${selectedRow.image_url}` : `no-image.png`}
                       title={selectedRow.product_name}
                     ></CardMedia>
                   </Card>
                   <input
                     accept="image/*"
-                    // className={classes.input}
                     style={{ display: 'none' }}
                     id="raised-button-file"
                     multiple
                     type="file"
-                    // hidden
                     onChange={saveImgUrl}
                   />
                   <label htmlFor="raised-button-file">

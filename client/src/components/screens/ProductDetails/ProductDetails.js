@@ -8,14 +8,14 @@ import {
   Paper,
   Typography,
 } from "@material-ui/core";
-// import { Button } from "grommet";
 import { Add, Remove } from "@material-ui/icons";
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import image from "../../../assets/product_imgs/bowflex-selecttech-552-dumbbell-set.png";
 
 export default function ProductDetails() {
   let { state } = useLocation();
+  let history = useHistory();
   let { productItem } = state;
   const [quantity, setQuantity] = useState(1);
   console.log(productItem);
@@ -25,7 +25,6 @@ export default function ProductDetails() {
       <Grid container direction="row" spacing={2}>
         <Typography variant="h3" style={{ marginTop: 20, marginBottom: 10 }}>
           {productItem.product_name}
-          {/* aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaajksdhfa;ksjhdfkljahsdlkfjhasldkjfhalksjdhflaksjdhflkajshdflkajshdflkjahsdfkljahsdkljfhaslkdjfhalskjdhfalksjdhflaksjdhflkajshdflkajshdflkajhsdflkjahsdlfkjhasdlkfjhasdlkjfh */}
         </Typography>
         <Grid item sm={8} style={{ overflow: "auto" }}>
           <Paper
@@ -112,7 +111,7 @@ export default function ProductDetails() {
                       backgroundColor: "#FE646F",
                     }}
                     onClick={() => {
-                      /* TODO */
+                      history.push("/Checkout");
                     }}
                   >
                     Purchase

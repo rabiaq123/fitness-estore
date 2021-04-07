@@ -101,6 +101,13 @@ const CategoryOptions = ({ category, setCategory }) => {
           </Button>
           <Button
             onClick={() => {
+              setCategory("others");
+            }}
+          >
+            Others
+          </Button>
+          <Button
+            onClick={() => {
               setCategory(null);
             }}
           >
@@ -256,7 +263,7 @@ export default function Products() {
     <Grid
       justify="stretch"
       // fill="horizontal"
-      rows={["384px", "384px"]}
+      rows={["204px", "204px"]}
       columns={["0.25fr", ".75fr"]}
       gap="xlarge"
       areas={[

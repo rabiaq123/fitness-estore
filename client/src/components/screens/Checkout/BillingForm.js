@@ -45,7 +45,7 @@ export default function BillingForm() {
                     size="small"
                     variant="outlined"
                     defaultValue="9925  7365  5632  3627"
-                    ref={register({ required: true, maxLength: 20 })}
+                    ref={register({ required: true, maxLength: 22 })}
                   />
                 </Grid>
                 <Grid item xs={12}>

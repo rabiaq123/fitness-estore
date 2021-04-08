@@ -157,7 +157,9 @@ const ProductOptionsMenu = ({
     <>
       <Accordion style={styles} elevation={0}>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography><b>Categories</b></Typography>
+          <Typography>
+            <b>Categories</b>
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <CategoryOptions category={category} setCategory={setCategory} />
@@ -165,7 +167,9 @@ const ProductOptionsMenu = ({
       </Accordion>
       <Accordion style={styles} elevation={0}>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography><b>Filter by Price</b></Typography>
+          <Typography>
+            <b>Filter by Price</b>
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <FilterOptions
@@ -176,7 +180,9 @@ const ProductOptionsMenu = ({
       </Accordion>
       <Accordion style={styles} elevation={0}>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography><b>Sort by Price</b></Typography>
+          <Typography>
+            <b>Sort by Price</b>
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <SortOptions sortBy={sortBy} setSortBy={setSortBy} />
@@ -316,7 +322,12 @@ export default function Products() {
                   product["category"].toLowerCase() ===
                     (category ? category : product["category"].toLowerCase()) &&
                   product["price"] <= filterPrice[1] &&
-                  product["price"] >= filterPrice[0]
+                  product["price"] >= filterPrice[0] &&
+                  (state?.searchInput
+                    ? product["product_name"]
+                        .toLowerCase()
+                        .includes(state.searchInput)
+                    : true)
                 );
               })
               .map((item, index) => {

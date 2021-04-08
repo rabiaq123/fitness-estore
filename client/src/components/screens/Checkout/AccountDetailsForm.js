@@ -9,6 +9,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import GuestCheckoutForm from './GuestCheckoutForm';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -19,114 +20,78 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function AccountDetailsForm() {
-    
+   
   const classes = useStyles();
 
-  const [value, setValue] = React.useState('');
-  const handleRadioChange = (event) => {
-      setValue(event.target.value);
-      console.log("event.target.value =", event.target.value);
-  };
+    const [value, setValue] = React.useState('');
+    const [loggedIn, setLoggedIn] = React.useState(false);
 
-  const renderLoginMethod = (option) => {
-      //if path to image is null, then just display name in card
-      if (option === "Login") {
-          return (
-              <form onSubmit={handleSubmit(onSubmit)}>
+    const handleRadioChange = (event) => {
+        setValue(event.target.value);
+    };
 
-                <Grid container spacing={3}>
-                  <Grid item xs={12}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <TextField fullWidth
-                          name="email"
-                          ref={register({ required: true, maxLength: 20 })}
-                          label="Email"
-                          size="small"
-                          variant="outlined"
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          label="Password"
-                          name="password"
-                          size="small"
-                          type="password"
-                          variant="outlined"
-                          ref={register({ required: true })}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button color="secondary" disabled={isSubmitting} fullWidth type="submit" variant="contained">
-                      Log in
-                    </Button>
-                  </Grid>
-                </Grid>
-              </form>
-          );
-      } else {
-        return (
-          <form>
+    const renderLoginMethod = (option) => {
+        //if path to image is null, then just display name in card
+        if (option === "Login") {
 
-            <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={6}>
-                        <TextField fullWidth
-                          name="firstName"
-                          ref={register({ required: true, maxLength: 20 })}
-                          label="First Name"
-                          size="small"
-                          variant="outlined"
-                        />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <TextField fullWidth
-                          name="lastName"
-                          ref={register({ required: true, maxLength: 20 })}
-                          label="Last Name"
-                          size="small"
-                          variant="outlined"
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField fullWidth
-                          name="email"
-                          ref={register({ required: true, maxLength: 20 })}
-                          label="Email"
-                          size="small"
-                          variant="outlined"
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField fullWidth
-                          name="phoneNumber"
-                          ref={register({ required: true, maxLength: 20 })}
-                          label="Phone Number"
-                          size="small"
-                          variant="outlined"
-                        />
-                      </Grid>
-                    </Grid>
-                </Grid>
-            </Grid>
-          </form>
-        );
-      }
+            if (loggedIn === false){
+                return (
+                    <form onSubmit={handleSubmit(onSubmit)}>
+
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12}>
+                                        <TextField fullWidth
+                                            name="email"
+                                            ref={register({ required: true, maxLength: 20 })}
+                                            label="Email"
+                                            size="small"
+                                            variant="outlined"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            label="Password"
+                                            name="password"
+                                            size="small"
+                                            type="password"
+                                            variant="outlined"
+                                            ref={register({ required: true })}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Button color="secondary" disabled={isSubmitting} fullWidth type="submit" variant="contained">
+                                    Log in
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </form>
+                );
+            } else {
+                return (
+                    <GuestCheckoutForm firstName={"Tony"} lastName={"Stark"} email={"tony@starkIndustries.com"} number={"(905)-254-3214"}/>
+                );
+            }
+            
+        } else {
+            return (
+                <GuestCheckoutForm firstName={""} lastName={""} email={""} number={""}/>
+            );
+        }
     }
 
     const { register,
-      handleSubmit,
-      errors,
-      setError,
-      clearError,
-      formState: { isSubmitting }} = useForm();
+        handleSubmit,
+        formState: { isSubmitting }} = useForm();
 
     const onSubmit = data => {
-      alert("Login Successful!");
+        alert("Login Successful!");
+        setLoggedIn(true);
+        renderLoginMethod(value);
     };
 
     return (

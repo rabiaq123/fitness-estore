@@ -11,6 +11,11 @@ import Box from '@material-ui/core/Box';
 import AccountDetailsForm from './AccountDetailsForm';
 import PickupMethodForm from './PickupMethodForm';
 import BillingForm from './BillingForm';
+// import OrderReview from '../../../assets/Checkout_imgs/OrderReview';
+import guy from "../../../assets/Checkout_imgs/OrderReview.jpg";
+import {  Image } from "grommet";
+import Grid from '@material-ui/core/Grid';
+import { createMuiTheme, ThemeProvider} from '@material-ui/core/styles';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -20,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     button: {
         marginTop: theme.spacing(1),
         marginRight: theme.spacing(1),
+
     },
     actionsContainer: {
         marginBottom: theme.spacing(2),
@@ -54,7 +60,8 @@ function getStepContent(step) {
             )
         case 3:
             return (
-                <p>HI review thine non existent order</p>
+
+                    <Image fit="contain" style={{ width: '100%', height: '80%' }} src={guy} />
             )
         default:
             return 'Unknown step';
@@ -76,12 +83,27 @@ export default function VerticalLinearStepper() {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    const handleReset = () => {
-        setActiveStep(0);
-    };
+    const theme = createMuiTheme({
+        palette: {
+            primary: {
+                light: '#fe838b',
+                main: '#FE646F',
+                dark: '#b1464d',
+                contrastText: '#fff',
+            },
+            secondary: {
+                light: '#fe838b',
+                main: '#FE646F',
+                dark: '#b1464d',
+                contrastText: '#000',
+            },
+        },
+    });
 
     return (
         <div className={classes.root}>
+            <ThemeProvider theme={theme}>
+
             <Stepper className={classes.appbar} activeStep={activeStep} orientation="vertical"  >
                 {steps.map((label, index) => (
                     <Step key={label}>
@@ -112,28 +134,42 @@ export default function VerticalLinearStepper() {
                 ))}
             </Stepper>
             {activeStep === steps.length && (
-              <div>
-                <Paper square elevation={5} className={classes.resetContainer}>
-                    <Typography variant="h6">
-                        <Box color="#FE646F">
-                            Your order has been placed !
-                        </Box>
-                    </Typography>
-                    <Typography variant="subtitle1">
-                        <Box fontWeight="fontWeightBold">
-                            Confirmation Number: 5896 2233 1367 1989    
-                        </Box>
-                    </Typography>
 
-                    <Typography variant="body2">Confirmation Text :)</Typography>
+                    <Grid style={{ padding: 20 }} item >
+                        <Paper square elevation={5} className={classes.resetContainer}>
+                            <Grid style={{ padding: 20 }} container justify="center" spacing={3}>
+                                <Grid style={{ padding: 20 }} item >
 
-                    <Button onClick={handleReset} className={classes.button}>
-                        Reset
-                    </Button>
-                </Paper>
-                <br/>
-              </div>
+                                    <Grid justify="center" style={{ padding: 10 }}item xs={12}>
+
+                                        <Typography align="center" variant="h6">
+                                            <Box color="#FE646F">
+                                                Your order has been placed !
+                                            </Box>
+                                        </Typography>
+                                    </Grid>
+
+                                    <Grid justify="center" style={{ padding: 10 }}item xs={12}>
+
+                                        <Typography align="center" variant="subtitle1">
+                                            <Box fontWeight="fontWeightBold">
+                                                Confirmation Number: 5896 2233 1367 1989    
+                                            </Box>
+                                        </Typography>
+
+                                    </Grid>
+
+                                    <Grid justify="center" style={{ padding: 10 }} item wrap="wrap"  xs={12}>
+
+                                        <Typography align="center" variant="body2">{"Your order will be ready for curbside pickup at the"}</Typography>
+                                        <Typography align="center" variant="body2">{"22 Mill St, Toronto location, April 10th from 1:00 pm to 1:30 pm"}</Typography>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Paper>
+                    </Grid>
             )}
+            </ThemeProvider>
         </div>
     );
 }

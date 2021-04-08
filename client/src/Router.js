@@ -10,7 +10,7 @@ import CheckoutPage from "./components/screens/Checkout/Checkout";
 
 export default function Router() {
   return (
-    <div>
+    <div style={{ marginBottom: 100 }}>
       <BrowserRouter>
         <Navbar />
         <Switch>

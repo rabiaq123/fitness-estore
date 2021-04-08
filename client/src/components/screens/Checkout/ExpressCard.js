@@ -32,6 +32,9 @@ export default function OutlinedCard() {
 
   const handleChange = (event) => {
     setState({state, [event.target.name]: event.target.checked }); //boolean value
+    if (event.target.checked === true) {
+      alert("A $100.00 CAD S/H fee will be applied to your order.");
+    }
   };
 
   const renderExpressCard = (option) => {
@@ -47,7 +50,6 @@ export default function OutlinedCard() {
         <div>
           {console.log("Express selected.")}
           Delivery Date: <b>04/15/2021</b>
-          {alert("A $100.00 CAD S/H fee will be applied to your order.")}
         </div>
       );
     }

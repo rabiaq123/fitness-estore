@@ -126,7 +126,7 @@ export default function AccountDetailsForm() {
       formState: { isSubmitting }} = useForm();
 
     const onSubmit = data => {
-      alert(JSON.stringify(data));
+      alert("Login Successful!");
     };
 
     return (

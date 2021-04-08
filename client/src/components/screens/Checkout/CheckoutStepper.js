@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import AccountDetailsForm from './AccountDetailsForm';
 import PickupMethodForm from './PickupMethodForm';
+import BillingForm from './BillingForm';
 // import OrderReview from '../../../assets/Checkout_imgs/OrderReview';
 import guy from "../../../assets/Checkout_imgs/OrderReview.jpg";
 import {  Image } from "grommet";
@@ -20,7 +21,6 @@ import { createMuiTheme, ThemeProvider} from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
-        
     },
     button: {
         marginTop: theme.spacing(1),
@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'flex-start',
     }
 }));
+
 
 function getSteps() {
     return ['Account Details', 'Delivery/Pickup Method', 'Billing Information', 'Review Order'];
@@ -55,7 +56,7 @@ function getStepContent(step) {
             )
         case 2:
             return (
-                <p>Add billing form</p>
+                <BillingForm/>
             )
         case 3:
             return (
@@ -66,6 +67,7 @@ function getStepContent(step) {
             return 'Unknown step';
     }
 }
+
 
 export default function VerticalLinearStepper() {
 

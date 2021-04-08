@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { Container } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
@@ -9,6 +8,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import ExpressCard from './ExpressCard';
 import DateFnsUtils from '@date-io/date-fns';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -65,40 +65,65 @@ export default function PickupMethodForm() {
         //if path to image is null, then just display name in card
         if (option === "Delivery") {
             return (
-                <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)}>
 
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <TextField fullWidth
-                                        name="email"
-                                        ref={register({ required: true, maxLength: 20 })}
-                                        label="Email"
-                                        size="small"
-                                        variant="outlined"
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        label="Password"
-                                        name="password"
-                                        size="small"
-                                        type="password"
-                                        variant="outlined"
-                                        ref={register({ required: true })}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button color="secondary" disabled={isSubmitting} fullWidth type="submit" variant="contained">
-                                Log in
-                        </Button>
-                        </Grid>
+                <Grid container spacing={3}>
+                  
+                  <Grid item xs={6}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <TextField fullWidth
+                          required
+                          name="address"
+                          label="Address"
+                          defaultValue="50 Stone Road E." 
+                          variant="outlined"
+                          size="small"
+                          ref={register({ required: true })}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField fullWidth
+                          required
+                          name="postalCode"
+                          label="Postal Code"
+                          defaultValue="N1G 2W1" 
+                          size="small"
+                          variant="outlined"
+                          ref={register({ required: true })}
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextField fullWidth
+                          required
+                          name="city"
+                          label="City"
+                          defaultValue="Guelph"
+                          size="small"
+                          variant="outlined"
+                          ref={register({ required: true, maxLength: 20 })}
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                          <TextField fullWidth
+                            required 
+                            name="province"
+                            label="Province" 
+                            defaultValue="ON" 
+                            size="small"
+                            variant="outlined"
+                            ref={register({ required: true, maxLength: 20 })}
+                          />
+                      </Grid>
                     </Grid>
-                </form>
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <ExpressCard/>
+                  </Grid>
+
+                </Grid>
+              </form>
             );
         } else {
             return (
@@ -117,7 +142,6 @@ export default function PickupMethodForm() {
                                                 id="Location"
                                                 value={location}
                                                 onChange={handleLocationChange}
-                                                
                                             >
                                                 <MenuItem value={"Toronto"}>22 Mill St, Toronto</MenuItem>
                                                 <MenuItem value={"Milton"}>19 Mavis Rd, Milton</MenuItem>
@@ -150,7 +174,6 @@ export default function PickupMethodForm() {
                                                 id="Time"
                                                 value={time}
                                                 onChange={handleTimeChange}
-
                                             >
                                                 <MenuItem value={"8:00am - 8:30am"}>8:00am - 8:30am</MenuItem>
                                                 <MenuItem value={"9:00am - 9:30am"}>9:00am - 9:30am</MenuItem>
@@ -184,21 +207,21 @@ export default function PickupMethodForm() {
 
     return (
         <Container className={classes.container} maxWidth="sm">
-                <Grid container spacing={3}>
-                    <Grid container xs={12}>
-                        <FormControl component="fieldset" >
-                            <RadioGroup aria-label="quiz" name="quiz" value={value} onChange={handleRadioChange}>
-                                <div>
-                                    <FormControlLabel value="CurbsidePickup" control={<Radio />} label="Curbside Pickup" />
-                                    <FormControlLabel value="Delivery" control={<Radio />} label="Delivery" />
-                                </div>
-                            </RadioGroup>
-                        </FormControl>
-                    </Grid>
+            <Grid container spacing={3}>
+                <Grid container xs={12}>
+                    <FormControl component="fieldset" >
+                        <RadioGroup aria-label="quiz" name="quiz" value={value} onChange={handleRadioChange}>
+                            <div>
+                                <FormControlLabel value="CurbsidePickup" control={<Radio />} label="Curbside Pickup" />
+                                <FormControlLabel value="Delivery" control={<Radio />} label="Delivery" />
+                            </div>
+                        </RadioGroup>
+                    </FormControl>
+                </Grid>
 
                 {renderDisplay(value)}
 
-                </Grid>
-        </Container>
-    );
+            </Grid>
+      </Container>
+  );
 } 

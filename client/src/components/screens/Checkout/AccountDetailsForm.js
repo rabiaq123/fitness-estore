@@ -20,10 +20,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function AccountDetailsForm() {
-
-    
-    
-    const classes = useStyles();
+   
+  const classes = useStyles();
 
     const [value, setValue] = React.useState('');
     const [loggedIn, setLoggedIn] = React.useState(false);
@@ -68,7 +66,7 @@ export default function AccountDetailsForm() {
                             <Grid item xs={12}>
                                 <Button color="secondary" disabled={isSubmitting} fullWidth type="submit" variant="contained">
                                     Log in
-                        </Button>
+                                </Button>
                             </Grid>
                         </Grid>
                     </form>
@@ -86,7 +84,6 @@ export default function AccountDetailsForm() {
         }
     }
 
-
     const { register,
         handleSubmit,
         formState: { isSubmitting }} = useForm();
@@ -98,22 +95,22 @@ export default function AccountDetailsForm() {
     };
 
     return (
-        <Container className={classes.container} maxWidth="sm">
-                <Grid container spacing={3}>
-                    <Grid container xs={12}>
-                        <FormControl component="fieldset" >
-                            <RadioGroup aria-label="quiz" name="quiz" value={value} onChange={handleRadioChange}>
-                                <div>
-                                    <FormControlLabel value="GuestCheckout" control={<Radio />} label="Guest Checkout" />
-                                    <FormControlLabel value="Login" control={<Radio />} label="Login" />
-                                </div>
-                            </RadioGroup>
-                        </FormControl>
-                    </Grid>
+      <Container className={classes.container} maxWidth="sm">
+        <Grid container spacing={3}>
+          <Grid container xs={12}>
+            <FormControl component="fieldset" >
+              <RadioGroup aria-label="quiz" name="quiz" value={value} onChange={handleRadioChange}>
+                <div>
+                  <FormControlLabel value="GuestCheckout" control={<Radio />} label="Guest Checkout" />
+                  <FormControlLabel value="Login" control={<Radio />} label="Login" />
+                </div>
+              </RadioGroup>
+            </FormControl>
+          </Grid>
 
-                    {renderLoginMethod(value)}
+          {renderLoginMethod(value)}
 
-                </Grid>
-        </Container>
+        </Grid>
+      </Container>
     );
 } 

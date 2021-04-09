@@ -78,6 +78,11 @@ const useStyles = makeStyles((theme) => ({
       background: "#FE646F",
     },
   },
+  valueLabel: {
+    "&>*": {
+      background: "#FE646F"
+    }
+  }
 }));
 
 const SortOptions = ({ sortBy, setSortBy }) => {
@@ -379,7 +384,7 @@ export default function Products() {
                 // console.log(category, product["category"]);
                 return (
                   product["category"].toLowerCase() ===
-                    (category ? category : product["category"].toLowerCase()) &&
+                  (category ? category : product["category"].toLowerCase()) &&
                   product["price"] <= filterPrice[1] &&
                   product["price"] >= filterPrice[0]
                 );

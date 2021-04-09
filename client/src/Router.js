@@ -9,6 +9,7 @@ import Navbar from "./components/utils/Navbar/Navbar";
 import CheckoutPage from "./components/screens/Checkout/Checkout";
 
 export default function Router() {
+
   return (
     <div style={{ marginBottom: 100 }}>
       <BrowserRouter>

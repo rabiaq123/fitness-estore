@@ -11,11 +11,12 @@ import {
 } from "@material-ui/core";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { ShoppingCart } from "@material-ui/icons";
-import { useDispatch, useSelector } from "react-redux";
-import loggedIn from "../../state/actions/loginAction.js";
+import { useDispatch, useSelector } from 'react-redux';
+import loggedIn from '../../state/actions/loginAction.js';
+import logoutPopup from '../../state/actions/logoutPopupAction';
 
 import "./Navbar.css";
 
@@ -123,8 +124,9 @@ export default function Navbar() {
   };
 
   let redirectToLogout = (event) => {
-    history.push("/");
+    history.push("/")
     dispatch(loggedIn());
+    dispatch(logoutPopup());
   };
 
   let redirectToCheckout = (event) => {

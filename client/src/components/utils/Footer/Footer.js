@@ -4,7 +4,7 @@ import { Anchor, Footer as SiteFooter, Text } from "grommet";
 export default function Footer() {
   return (
     <SiteFooter
-      style={{ padding: 20, position: "fixed", bottom: 0, width: "100vw" }}
+      style={{ padding: 20, position: "static", bottom: 0, width: "100vw" }}
       background="#FE646F"
     >
       <Text color="white" style={{ fontWeight: "bold" }}>

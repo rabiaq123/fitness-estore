@@ -257,7 +257,7 @@ export default function Products() {
       .get("https://fitnova-server.herokuapp.com/API/getProducts")
       .then((resp) => {
         // console.log(resp);
-        setProducts(resp.data.records);
+        // setProducts(resp.data.records);
       });
 
     document.title = "Products Page";
@@ -307,7 +307,11 @@ export default function Products() {
           className={classes.productContainer}
           elevation={0}
         >
-          {!products && <CircularProgress style={{ alignSelf: "center" }} />}
+          {!products && (
+            <CircularProgress
+              style={{ alignSelf: "center", color: "#FE646F" }}
+            />
+          )}
           {products?.length === 0 && (
             <div>
               <Typography variant="h2">

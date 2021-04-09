@@ -163,6 +163,7 @@ export default function ProductDetails() {
                 }}
               >
                 <Accordion
+                  expanded
                   style={{ borderRadius: 10, backgroundColor: "#EFF0F6" }}
                   elevation={0}
                 >
@@ -181,6 +182,7 @@ export default function ProductDetails() {
                   </AccordionDetails>
                 </Accordion>
                 <Accordion
+                  expanded
                   style={{ borderRadius: 10, backgroundColor: "#EFF0F6" }}
                   elevation={0}
                 >

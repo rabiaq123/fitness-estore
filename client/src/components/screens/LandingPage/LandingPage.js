@@ -6,6 +6,7 @@ import clearLogoutPopup from '../../state/actions/logoutPopupClearAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { Snackbar } from "@material-ui/core"
 import MuiAlert from '@material-ui/lab/Alert';
+import Footer from "../../utils/Footer/Footer";
 
 export default function LandingPage() {
   // Closes the modals
@@ -45,6 +46,8 @@ export default function LandingPage() {
           You have successfully logged in!
         </Alert>
       </Snackbar>
+
+      <Footer />
     </div>
   );
 }

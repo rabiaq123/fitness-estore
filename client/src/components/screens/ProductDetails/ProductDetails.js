@@ -64,7 +64,6 @@ export default function ProductDetails() {
               >
                 <div style={{ padding: 25 }}>
                   <Typography variant="h4" style={{ fontWeight: "bolder" }}>
-                    ${" "}
                     {new Intl.NumberFormat("en-US", {
                       style: "currency",
                       currency: "USD",
@@ -75,7 +74,6 @@ export default function ProductDetails() {
                       marginTop: 20,
                       display: "flex",
                       flexDirection: "column",
-                      // justifyContent: "space-between",
                       gap: 150,
                     }}
                   >

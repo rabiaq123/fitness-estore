@@ -11,8 +11,13 @@ import {
 } from "@material-ui/core";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
-import { Link, useHistory } from "react-router-dom";
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { ShoppingCart } from "@material-ui/icons";
+import { useDispatch, useSelector } from 'react-redux';
+import loggedIn from '../../state/actions/loginAction.js';
+import logoutPopup from '../../state/actions/logoutPopupAction';
+
 import "./Navbar.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     padding: "10px",
     borderRadius: "10px",
-    margin: "0 20px 0 20px",
+    margin: "0 0 0 20px",
   },
   navMenu: {
     "& > .MuiPaper-root": {
@@ -41,7 +46,8 @@ const useStyles = makeStyles((theme) => ({
   },
   search: {
     position: "relative",
-    borderRadius: theme.shape.borderRadius,
+    flexGrow: 1,
+    borderRadius: 20,
     backgroundColor: fade(theme.palette.common.white, 0.15),
     "&:hover": {
       backgroundColor: fade(theme.palette.common.white, 0.25),
@@ -65,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
   },
   inputRoot: {
     color: "inherit",
+    width: "100%",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
@@ -88,7 +95,10 @@ const useStyles = makeStyles((theme) => ({
 export default function Navbar() {
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
+  const isLogged = useSelector((state) => state.isLogged);
+  const dispatch = useDispatch();
 
   let handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -103,6 +113,24 @@ export default function Navbar() {
     let searchString = event.target.value;
     // console.log(event.target.value);
     history.push("/products", { searchInput: searchString });
+  };
+
+  let redirectToLogin = (event) => {
+    history.push("login");
+  };
+
+  let redirectToInventory = (event) => {
+    history.push("inventory");
+  };
+
+  let redirectToLogout = (event) => {
+    history.push("/")
+    dispatch(loggedIn());
+    dispatch(logoutPopup());
+  };
+
+  let redirectToCheckout = (event) => {
+    history.push("checkout");
   };
 
   let productsMenu = (
@@ -141,6 +169,14 @@ export default function Navbar() {
         </Link>
       </MenuItem>
       <MenuItem className={classes.navMenuItems} onClick={handleClose}>
+        <Link
+          to={{ pathname: "/products", state: { category: "others" } }}
+          className="menu_links"
+        >
+          Others
+        </Link>
+      </MenuItem>
+      <MenuItem className={classes.navMenuItems} onClick={handleClose}>
         <Link to="/products" className="menu_links">
           All Products
         </Link>
@@ -148,7 +184,55 @@ export default function Navbar() {
     </Menu>
   );
 
+  let employeeOptions;
+  if (isLogged) {
+    employeeOptions = (
+      <div>
+        <Button className={classes.navButtons} onClick={redirectToInventory}>
+          Inventory
+        </Button>
+
+        <Button
+          className={classes.navButtons}
+          onClick={() => {
+            console.log("Redirecting to orders page");
+          }}
+        >
+          Orders
+        </Button>
+      </div>
+    );
+  }
+
+  let loginOptions;
+  if (isLogged) {
+    loginOptions = (
+      <div>
+        <Button
+          startIcon={<AccountCircleIcon className={classes.shoppingCartIcon} />}
+          className={classes.navButtons}
+          onClick={redirectToLogout}
+        >
+          Logout
+        </Button>
+      </div>
+    );
+  } else {
+    loginOptions = (
+      <div>
+        <Button
+          startIcon={<AccountCircleIcon className={classes.shoppingCartIcon} />}
+          className={classes.navButtons}
+          onClick={redirectToLogin}
+        >
+          Login
+        </Button>
+      </div>
+    );
+  }
+
   return (
+    // {location !== "/checkout" &&
     <div className={classes.grow}>
       <AppBar position="static">
         <Toolbar
@@ -165,6 +249,8 @@ export default function Navbar() {
           <Button className={classes.navButtons} onClick={handleClick}>
             Products
           </Button>
+
+          {employeeOptions}
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -176,8 +262,14 @@ export default function Navbar() {
             />
           </div>
           <IconButton className={classes.shoppingCartButton}>
-            <ShoppingCart className={classes.shoppingCartIcon} size="small" />
+            <ShoppingCart
+              className={classes.shoppingCartIcon}
+              size="small"
+              onClick={redirectToCheckout}
+            />
           </IconButton>
+
+          {loginOptions}
         </Toolbar>
         {productsMenu}
       </AppBar>

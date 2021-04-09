@@ -383,10 +383,12 @@ export default function InventoryTable() {
         // console.log(data)
         loadRows(data);
         setIsLoading(false);
+
       })
       .catch((err) => {
         console.log(err);
       });
+    document.title = "Inventory";
   }, [searchFilter, rows])
 
 

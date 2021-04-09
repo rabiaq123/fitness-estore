@@ -107,7 +107,7 @@ export default function VerticalLinearStepper() {
             <Stepper className={classes.appbar} activeStep={activeStep} orientation="vertical"  >
                 {steps.map((label, index) => (
                     <Step key={label}>
-                        <StepLabel >{label}</StepLabel>
+                        <StepLabel><Typography variant="h6"><b>{label}</b></Typography></StepLabel>
                         <StepContent>
                             {getStepContent(index)}
                             <div className={classes.actionsContainer}>

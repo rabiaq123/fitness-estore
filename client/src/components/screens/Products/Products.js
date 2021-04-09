@@ -302,7 +302,11 @@ export default function Products() {
         </Paper>
       </Box>
       <Box gridArea="products-container">
-        <Paper className={classes.productContainer} elevation={0}>
+        <Paper
+          id="products_container_paper"
+          className={classes.productContainer}
+          elevation={0}
+        >
           {!products && <CircularProgress style={{ alignSelf: "center" }} />}
           {products?.length === 0 && (
             <div>

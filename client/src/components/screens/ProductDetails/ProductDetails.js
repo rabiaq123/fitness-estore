@@ -11,7 +11,7 @@ import {
 import { Add, ExpandMore, Remove } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { useLocation, useHistory } from "react-router-dom";
-import image from "../../../assets/product_imgs/bowflex-selecttech-552-dumbbell-set.png";
+// import image from "../../../assets/product_imgs/bowflex-selecttech-552-dumbbell-set.png";
 import "./ProductDetails.css";
 
 export default function ProductDetails() {
@@ -47,7 +47,7 @@ export default function ProductDetails() {
                 <img
                   width="100%"
                   height={800}
-                  src={image}
+                  src={`/product_imgs/${productItem.image_url}`}
                   style={{ objectFit: "contain" }}
                   alt={productItem.product_name}
                 />

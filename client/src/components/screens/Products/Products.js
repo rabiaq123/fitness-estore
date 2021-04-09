@@ -398,7 +398,7 @@ export default function Products() {
                   (state?.searchInput
                     ? product["product_name"]
                         .toLowerCase()
-                        .includes(state.searchInput)
+                        .includes(state.searchInput.toLowerCase())
                     : true)
                 );
               })

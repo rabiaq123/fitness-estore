@@ -175,7 +175,7 @@ export default function ProductDetails() {
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <Typography variant="body1">
+                    <Typography id="prod_desc" variant="body1">
                       {productItem.product_description}
                     </Typography>
                   </AccordionDetails>
@@ -193,7 +193,9 @@ export default function ProductDetails() {
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <Typography variant="body1">{productItem.notes}</Typography>
+                    <Typography id="prod_notes" variant="body1">
+                      {productItem.notes}
+                    </Typography>
                   </AccordionDetails>
                 </Accordion>
               </div>

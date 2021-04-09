@@ -1,3 +1,8 @@
 .MuiAccordion-root {
   position: unset !important;
 }
+
+#prod_desc,
+#prod_notes {
+  white-space: pre-line;
+}

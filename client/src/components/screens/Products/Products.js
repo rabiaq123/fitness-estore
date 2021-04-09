@@ -257,7 +257,7 @@ export default function Products() {
       .get("https://fitnova-server.herokuapp.com/API/getProducts")
       .then((resp) => {
         // console.log(resp);
-        // setProducts(resp.data.records);
+        setProducts(resp.data.records);
       });
 
     document.title = "Products Page";

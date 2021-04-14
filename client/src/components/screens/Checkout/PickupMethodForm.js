@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { Container } from "@material-ui/core";
 import { useForm } from "react-hook-form";
@@ -9,6 +8,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
+import ExpressCard from "./ExpressCard";
 import DateFnsUtils from "@date-io/date-fns";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -67,42 +67,61 @@ export default function PickupMethodForm() {
       return (
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    name="email"
-                    ref={register({ required: true, maxLength: 20 })}
-                    label="Email"
-                    size="small"
+                    required
+                    name="address"
+                    label="Address"
+                    defaultValue="50 Stone Road E."
                     variant="outlined"
+                    size="small"
+                    ref={register({ required: true })}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label="Password"
-                    name="password"
+                    required
+                    name="postalCode"
+                    label="Postal Code"
+                    defaultValue="N1G 2W1"
                     size="small"
-                    type="password"
                     variant="outlined"
                     ref={register({ required: true })}
                   />
                 </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    required
+                    name="city"
+                    label="City"
+                    defaultValue="Guelph"
+                    size="small"
+                    variant="outlined"
+                    ref={register({ required: true, maxLength: 20 })}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    required
+                    name="province"
+                    label="Province"
+                    defaultValue="ON"
+                    size="small"
+                    variant="outlined"
+                    ref={register({ required: true, maxLength: 20 })}
+                  />
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Button
-                color="secondary"
-                disabled={isSubmitting}
-                fullWidth
-                type="submit"
-                variant="contained"
-                style={{ color: "white" }}
-              >
-                Log in
-              </Button>
+
+            <Grid item xs={6}>
+              <ExpressCard />
             </Grid>
           </Grid>
         </form>

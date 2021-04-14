@@ -80,9 +80,9 @@ const useStyles = makeStyles((theme) => ({
   },
   valueLabel: {
     "&>*": {
-      background: "#FE646F"
-    }
-  }
+      background: "#FE646F",
+    },
+  },
 }));
 
 const SortOptions = ({ sortBy, setSortBy }) => {
@@ -366,8 +366,16 @@ export default function Products() {
         </Paper>
       </Box>
       <Box gridArea="products-container">
-        <Paper className={classes.productContainer} elevation={0}>
-          {!products && <CircularProgress style={{ alignSelf: "center" }} />}
+        <Paper
+          id="products_container_paper"
+          className={classes.productContainer}
+          elevation={0}
+        >
+          {!products && (
+            <CircularProgress
+              style={{ alignSelf: "center", color: "#FE646F" }}
+            />
+          )}
           {products?.length === 0 && (
             <div>
               <Typography variant="h2">
@@ -384,9 +392,14 @@ export default function Products() {
                 // console.log(category, product["category"]);
                 return (
                   product["category"].toLowerCase() ===
-                  (category ? category : product["category"].toLowerCase()) &&
+                    (category ? category : product["category"].toLowerCase()) &&
                   product["price"] <= filterPrice[1] &&
-                  product["price"] >= filterPrice[0]
+                  product["price"] >= filterPrice[0] &&
+                  (state?.searchInput
+                    ? product["product_name"]
+                        .toLowerCase()
+                        .includes(state.searchInput.toLowerCase())
+                    : true)
                 );
               })
               .map((item, index) => {
